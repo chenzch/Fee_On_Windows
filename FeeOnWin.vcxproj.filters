@@ -1,0 +1,162 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="支持头文件">
+      <UniqueIdentifier>{aa075a54-8f48-4c7b-8eaa-dbded7dd8609}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="generate\include\C40_Ip_Cfg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="generate\include\Fee_Cfg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="generate\include\Fee_Features.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="generate\include\Mem_43_INFLS_Cfg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="generate\include\Mem_43_INFLS_CfgDefines.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="generate\include\MemAcc_Cfg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="generate\include\MemAcc_CfgDefines.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="generate\include\MemAcc_PBcfg.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RTD\include\C40_Ip.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RTD\include\C40_Ip_Ac.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RTD\include\C40_Ip_Types.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RTD\include\Fee.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RTD\include\Fee_Cbk.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RTD\include\Fee_InternalTypes.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RTD\include\Fee_Types.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RTD\include\Mem_43_INFLS.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RTD\include\Mem_43_INFLS_Ipw.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RTD\include\Mem_43_INFLS_Types.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RTD\include\MemAcc.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RTD\include\MemAcc_Types.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RTD\include\MemIf_Types.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Devassert.h">
+      <Filter>支持头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Fee_MemMap.h">
+      <Filter>支持头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Mcal.h">
+      <Filter>支持头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Mem_43_INFLS_MemMap.h">
+      <Filter>支持头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MemAcc_GeneralTypes.h">
+      <Filter>支持头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MemAcc_MemMap.h">
+      <Filter>支持头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\OsIf.h">
+      <Filter>支持头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\S32K344_FLASH.h">
+      <Filter>支持头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\S32K344_PFLASH.h">
+      <Filter>支持头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\StandardTypes.h">
+      <Filter>支持头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Det.h">
+      <Filter>支持头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SchM_Fee.h">
+      <Filter>支持头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SchM_Mem_43_INFLS.h">
+      <Filter>支持头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="include\SchM_MemAcc.h">
+      <Filter>支持头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="generate\src\C40_Ip_Cfg.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="generate\src\Fee_Cfg.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="generate\src\Mem_43_INFLS_Cfg.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="generate\src\MemAcc_Cfg.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="generate\src\MemAcc_PBcfg.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="RTD\src\C40_Ip.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="RTD\src\Fee.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="RTD\src\Mem_43_INFLS.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="RTD\src\Mem_43_INFLS_Ipw.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="RTD\src\MemAcc.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
