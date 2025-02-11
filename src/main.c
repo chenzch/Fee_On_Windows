@@ -103,40 +103,61 @@ int main(void)
     /* Init fee success */
     Fee_ExampleAssert(MEMIF_JOB_OK   == Fee_GetJobResult());
 
-    /*Write data to block 0*/
-    RetValue = Fee_Write(FeeConf_FeeBlockConfiguration_FeeBlockConfiguration_0, DataBlock0);
-    Fee_ExampleAssert(E_OK == RetValue);
-    /*Perform write data to Block 0*/
+
+    Fee_Write(FeeConf_FeeBlockConfiguration_FeeBlockConfiguration_0, DataBlock0);
+    Fee_MainFunction();
+    MemAcc_MainFunction();
+    Fee_MainFunction();
+    MemAcc_MainFunction();
+    Fee_Cancel();
+    Fee_MainFunction();
+    MemAcc_MainFunction();
+    Fee_MainFunction();
+    MemAcc_MainFunction();
+    Fee_Write(FeeConf_FeeBlockConfiguration_FeeBlockConfiguration_0, DataBlock0);
     do
     {
         Fee_MainFunction();
         MemAcc_MainFunction();
         status = Fee_GetStatus();
     } while (status != MEMIF_IDLE);
-    /* Write operation success */
-    Fee_ExampleAssert(MEMIF_JOB_OK   == Fee_GetJobResult());
 
-    /*Read data block 0, from offset 2 and length is 2*/
-    RetValue = Fee_Read(FeeConf_FeeBlockConfiguration_FeeBlockConfiguration_0, 2, DataReceive, 2);
-    Fee_ExampleAssert(E_OK == RetValue);
 
-    /*Perform read data form Block 0*/
-    do
-    {
-        Fee_MainFunction();
-        MemAcc_MainFunction();
-        status = Fee_GetStatus();
-    } while (status != MEMIF_IDLE);
-    Fee_ExampleAssert(MEMIF_JOB_OK   == Fee_GetJobResult());
-    /*Check Data*/
-    if((DataReceive[0] != DataBlock0[2])|| (DataReceive[1] != DataBlock0[3]))
-    {
-        RetValue = E_NOT_OK;
-    }
-    else
-    {
-        RetValue = E_OK;
-    }
+
+    ///*Write data to block 0*/
+    //RetValue = Fee_Write(FeeConf_FeeBlockConfiguration_FeeBlockConfiguration_0, DataBlock0);
+    //Fee_ExampleAssert(E_OK == RetValue);
+    ///*Perform write data to Block 0*/
+    //do
+    //{
+    //    Fee_MainFunction();
+    //    MemAcc_MainFunction();
+    //    status = Fee_GetStatus();
+    //} while (status != MEMIF_IDLE);
+    ///* Write operation success */
+    //Fee_ExampleAssert(MEMIF_JOB_OK   == Fee_GetJobResult());
+
+    ///*Read data block 0, from offset 2 and length is 2*/
+    //RetValue = Fee_Read(FeeConf_FeeBlockConfiguration_FeeBlockConfiguration_0, 2, DataReceive, 2);
+    //Fee_ExampleAssert(E_OK == RetValue);
+
+    ///*Perform read data form Block 0*/
+    //do
+    //{
+    //    Fee_MainFunction();
+    //    MemAcc_MainFunction();
+    //    status = Fee_GetStatus();
+    //} while (status != MEMIF_IDLE);
+    //Fee_ExampleAssert(MEMIF_JOB_OK   == Fee_GetJobResult());
+    ///*Check Data*/
+    //if((DataReceive[0] != DataBlock0[2])|| (DataReceive[1] != DataBlock0[3]))
+    //{
+    //    RetValue = E_NOT_OK;
+    //}
+    //else
+    //{
+    //    RetValue = E_OK;
+    //}
 
     X86_Unload();
 

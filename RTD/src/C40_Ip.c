@@ -1125,8 +1125,6 @@ static boolean X86_Init(void) {
     return TRUE;
 }
 
-static uint64_t g_Store = 0xFFFFFFFFFFFFFFFF;
-
 static boolean X86_Read(uint32 Address, uint8 *Data, uint32 Size) {
     printf("X86_Read Called %08X %08X %d\n", Address, (uint32_t)Data, Size);
 
@@ -1151,7 +1149,15 @@ static boolean X86_Write(uint32 Address, const uint8 *Data, uint32 Size) {
 	if (g_BlockEntries) {
         for (uint32_t BlockIndex = 0; BlockIndex < g_BlockEntryCount; BlockIndex++) {
             if (Address >= g_BlockEntries[BlockIndex].StartAddr && Address < g_BlockEntries[BlockIndex].StartAddr + g_BlockEntries[BlockIndex].Length) {
-                memcpy(g_BlockEntries[BlockIndex].pBuff + (Address - g_BlockEntries[BlockIndex].StartAddr), Data, Size);
+                uint8_t* pStartPos = g_BlockEntries[BlockIndex].pBuff + (Address - g_BlockEntries[BlockIndex].StartAddr);
+				for (uint32_t index = 0; index < Size; index++) {
+					if (pStartPos[index] != 0xFF) {
+                        pStartPos = 0;
+						pStartPos[1] = 0; // Raise an exception for debug
+                        for (;;);
+					}
+				}
+                memcpy(pStartPos, Data, Size);
                 break;
             }
         }
