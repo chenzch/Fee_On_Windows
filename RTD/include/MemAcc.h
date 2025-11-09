@@ -7,12 +7,12 @@
 *   Autosar Version      : 4.7.0
 *   Autosar Revision     : ASR_REL_4_7_REV_0000
 *   Autosar Conf.Variant :
-*   SW Version           : 4.0.0
-*   Build Version        : S32K3_RTD_4_0_0_HF02_D2407_ASR_REL_4_7_REV_0000_20240725
+*   SW Version           : 6.0.0
+*   Build Version        : S32K3_RTD_6_0_0_D2506_ASR_REL_4_7_REV_0000_20250610
 *
-*   Copyright 2020 - 2024 NXP
+*   Copyright 2020 - 2025 NXP
 *
-*   NXP Confidential. This software is owned or controlled by NXP and may only be
+*   NXP Confidential and Proprietary. This software is owned or controlled by NXP and may only be
 *   used strictly in accordance with the applicable license terms. By expressly
 *   accepting such terms or by downloading, installing, activating and/or otherwise
 *   using the software, you are agreeing that you have read, and that you agree to
@@ -44,10 +44,7 @@ extern "C"{
 * 3) internal and external interfaces from this unit
 ==================================================================================================*/
 #include "MemAcc_Cfg.h"
-#if (STD_ON == MEMACC_MULTICORE_TYPE_1_ENABLED)
-#include "CDD_Rm.h"
-#endif
-#if (MEMACC_MULTICORE_TYPE_3_ENABLED == STD_ON)
+#if (MEMACC_MULTI_PARTITION_TYPE_3_ENABLED == STD_ON)
 #include "Mcal.h"
 #endif
 /*==================================================================================================
@@ -57,7 +54,7 @@ extern "C"{
 #define MEMACC_AR_RELEASE_MAJOR_VERSION       4
 #define MEMACC_AR_RELEASE_MINOR_VERSION       7
 #define MEMACC_AR_RELEASE_REVISION_VERSION    0
-#define MEMACC_SW_MAJOR_VERSION               4
+#define MEMACC_SW_MAJOR_VERSION               6
 #define MEMACC_SW_MINOR_VERSION               0
 #define MEMACC_SW_PATCH_VERSION               0
 
@@ -84,16 +81,8 @@ extern "C"{
     )
     #error "Software Version Numbers of MemAcc.h and MemAcc_Cfg.h are different"
 #endif
-#if (STD_ON == MEMACC_MULTICORE_TYPE_1_ENABLED)
-/* Check if header file and CDD_Rm.h header file are of the same Autosar version */
-#if ((MEMACC_AR_RELEASE_MAJOR_VERSION != RM_AR_RELEASE_MAJOR_VERSION) || \
-        (MEMACC_AR_RELEASE_MINOR_VERSION != RM_AR_RELEASE_MINOR_VERSION) \
-    )
-    #error "AutoSar Version Numbers of MemAcc.h and CDD_Rm.h are different"
-#endif
-#endif
 
-#if (MEMACC_MULTICORE_TYPE_3_ENABLED == STD_ON)
+#if (MEMACC_MULTI_PARTITION_TYPE_3_ENABLED == STD_ON)
 #ifndef DISABLE_MCAL_INTERMODULE_ASR_CHECK
     /* Check if the files MemAcc.h and Mcal.h are of the same version */
    #if ((MEMACC_AR_RELEASE_MAJOR_VERSION != MCAL_AR_RELEASE_MAJOR_VERSION) || \
@@ -127,6 +116,7 @@ extern "C"{
 #define MEMACC_E_PARAM_HW_ID                       0x05U  /**< @brief Development error codes (passed to DET). API service called with a hardware ID not belonging to the passed address area ID       */
 #define MEMACC_E_BUSY                              0x06U  /**< @brief Development error codes (passed to DET). API service called for an address area ID with a pending job request                    */
 #define MEMACC_E_MEM_INIT_FAILED                   0x07U  /**< @brief Development error codes (passed to DET). Dynamic MEM driver activation failed due to inconsistent MEM driver binary              */
+#define MEMACC_E_PARAM_CONFIG                      0x08U  /**< @brief Development error codes (passed to DET). API service called with wrong / inconsistent parameter(s)                               */
 #define MEMACC_E_OK                                0xFFU  /**< @brief Development error codes (passed to DET). API service called without errors                                                       */
 
 
@@ -168,13 +158,14 @@ extern "C"{
 #define MEMACC_ADDRESSAREAJOBENDNOTIFICATION_ID    0x0FU  /**< @brief Service ID of function AddressAreaJobEndNotification        */
 #define MEMACC_APPLICATIONLOCKNOTIFICATION_ID      0x14U  /**< @brief Service ID of function MemAcc_ApplicationLockNotification   */
 
-#if (MEMACC_MULTICORE_TYPE_3_ENABLED == STD_ON)
-    #define MemAcc_GetCoreID()            OsIf_GetCoreID()
+#if (MEMACC_MULTI_PARTITION_TYPE_3_ENABLED == STD_ON)
+    #define MemAcc_GetUserID()            OsIf_GetUserId()
 #endif
 
 /*==================================================================================================
 *                                            CONSTANTS
 ==================================================================================================*/
+#ifndef MEMACC_PRECOMPILE_SUPPORT
 #define MEMACC_START_SEC_CONFIG_DATA_UNSPECIFIED
 #include "MemAcc_MemMap.h"
 
@@ -182,7 +173,7 @@ MEMACC_CONFIG_EXT
 
 #define MEMACC_STOP_SEC_CONFIG_DATA_UNSPECIFIED
 #include "MemAcc_MemMap.h"
-
+#endif
 /*==================================================================================================
 *                                              ENUMS
 ==================================================================================================*/
@@ -194,7 +185,7 @@ MEMACC_CONFIG_EXT
 /*==================================================================================================
 *                                  GLOBAL VARIABLE DECLARATIONS
 ==================================================================================================*/
-#if (MEMACC_MULTICORE_TYPE_3_ENABLED == STD_ON)
+#if (MEMACC_MULTI_PARTITION_TYPE_3_ENABLED == STD_ON)
 #define MEMACC_START_SEC_VAR_SHARED_CLEARED_UNSPECIFIED_NO_CACHEABLE
 #else
 #define MEMACC_START_SEC_VAR_CLEARED_UNSPECIFIED
@@ -204,7 +195,7 @@ MEMACC_CONFIG_EXT
 /* Pointer to current memacc module configuration set */
 extern const MemAcc_ConfigType            *MemAcc_pConfigPtr;
 
-#if (MEMACC_MULTICORE_TYPE_3_ENABLED == STD_ON)
+#if (MEMACC_MULTI_PARTITION_TYPE_3_ENABLED == STD_ON)
 #define MEMACC_STOP_SEC_VAR_SHARED_CLEARED_UNSPECIFIED_NO_CACHEABLE
 #else
 #define MEMACC_STOP_SEC_VAR_CLEARED_UNSPECIFIED
@@ -313,10 +304,10 @@ MemAcc_JobStatusType MemAcc_GetJobStatus(MemAcc_AddressAreaIdType AddressAreaId)
  *
  * @api
  */
-Std_ReturnType MemAcc_GetMemoryInfo (MemAcc_AddressAreaIdType    AddressAreaId,
-                                     MemAcc_AddressType          Address,
-                                     MemAcc_MemoryInfoType      *MemoryInfoPtr
-                                    );
+Std_ReturnType MemAcc_GetMemoryInfo(MemAcc_AddressAreaIdType    AddressAreaId,
+                                    MemAcc_AddressType          Address,
+                                    MemAcc_MemoryInfoType      *MemoryInfoPtr
+                                   );
 
 
 /**
@@ -347,9 +338,9 @@ MemAcc_LengthType MemAcc_GetProcessedLength(MemAcc_AddressAreaIdType AddressArea
  *
  * @api
  */
-void MemAcc_GetJobInfo (MemAcc_AddressAreaIdType    AddressAreaId,
-                        MemAcc_JobInfoType         *JobInfoPtr
-                       );
+void MemAcc_GetJobInfo(MemAcc_AddressAreaIdType    AddressAreaId,
+                       MemAcc_JobInfoType         *JobInfoPtr
+                      );
 
 
 /**
@@ -366,9 +357,9 @@ void MemAcc_GetJobInfo (MemAcc_AddressAreaIdType    AddressAreaId,
  *
  * @api
  */
-Std_ReturnType MemAcc_ActivateMem (MemAcc_AddressType    HeaderAddress,
-                                   MemAcc_HwIdType       HwId
-                                  );
+Std_ReturnType MemAcc_ActivateMem(MemAcc_AddressType    HeaderAddress,
+                                  MemAcc_HwIdType       HwId
+                                 );
 
 
 /**
@@ -385,9 +376,9 @@ Std_ReturnType MemAcc_ActivateMem (MemAcc_AddressType    HeaderAddress,
  *
  * @api
  */
-Std_ReturnType MemAcc_DeactivateMem (MemAcc_HwIdType       HwId,
-                                     MemAcc_AddressType    HeaderAddress
-                                    );
+Std_ReturnType MemAcc_DeactivateMem(MemAcc_HwIdType       HwId,
+                                    MemAcc_AddressType    HeaderAddress
+                                   );
 
 
 /**
@@ -432,11 +423,11 @@ void MemAcc_Cancel(MemAcc_AddressAreaIdType AddressAreaId);
  *
  * @pre              The module has to be initialized.
  */
-Std_ReturnType MemAcc_Read (MemAcc_AddressAreaIdType    AddressAreaId,
-                            MemAcc_AddressType          SourceAddress,
-                            MemAcc_DataType            *DestinationDataPtr,
-                            MemAcc_LengthType           Length
-                           );
+Std_ReturnType MemAcc_Read(MemAcc_AddressAreaIdType    AddressAreaId,
+                           MemAcc_AddressType          SourceAddress,
+                           MemAcc_DataType            *DestinationDataPtr,
+                           MemAcc_LengthType           Length
+                          );
 
 /**
  * @brief            Writes to an address area.
@@ -460,11 +451,11 @@ Std_ReturnType MemAcc_Read (MemAcc_AddressAreaIdType    AddressAreaId,
  *
  * @pre              The module has to be initialized.
  */
-Std_ReturnType MemAcc_Write (MemAcc_AddressAreaIdType     AddressAreaId,
-                             MemAcc_AddressType           TargetAddress,
-                             const MemAcc_DataType       *SourceDataPtr,
-                             MemAcc_LengthType            Length
-                            );
+Std_ReturnType MemAcc_Write(MemAcc_AddressAreaIdType     AddressAreaId,
+                            MemAcc_AddressType           TargetAddress,
+                            const MemAcc_DataType       *SourceDataPtr,
+                            MemAcc_LengthType            Length
+                           );
 
 
 /**
@@ -489,10 +480,10 @@ Std_ReturnType MemAcc_Write (MemAcc_AddressAreaIdType     AddressAreaId,
  *
  * @pre              The module has to be initialized.
  */
-Std_ReturnType MemAcc_Erase (MemAcc_AddressAreaIdType    AddressAreaId,
-                             MemAcc_AddressType          TargetAddress,
-                             MemAcc_LengthType           Length
-                            );
+Std_ReturnType MemAcc_Erase(MemAcc_AddressAreaIdType    AddressAreaId,
+                            MemAcc_AddressType          TargetAddress,
+                            MemAcc_LengthType           Length
+                           );
 
 
 #if (MEMACC_COMPARE_API == STD_ON)
@@ -519,11 +510,11 @@ Std_ReturnType MemAcc_Erase (MemAcc_AddressAreaIdType    AddressAreaId,
  *
  * @pre              The module has to be initialized.
  */
-Std_ReturnType MemAcc_Compare (MemAcc_AddressAreaIdType    AddressAreaId,
-                               MemAcc_AddressType          SourceAddress,
-                               const MemAcc_DataType      *DataPtr,
-                               MemAcc_LengthType           Length
-                              );
+Std_ReturnType MemAcc_Compare(MemAcc_AddressAreaIdType    AddressAreaId,
+                              MemAcc_AddressType          SourceAddress,
+                              const MemAcc_DataType      *DataPtr,
+                              MemAcc_LengthType           Length
+                             );
 
 #endif
 
@@ -549,10 +540,10 @@ Std_ReturnType MemAcc_Compare (MemAcc_AddressAreaIdType    AddressAreaId,
  *
  * @pre              The module has to be initialized.
  */
-Std_ReturnType MemAcc_BlankCheck (MemAcc_AddressAreaIdType    AddressAreaId,
-                                  MemAcc_AddressType          TargetAddress,
-                                  MemAcc_LengthType           Length
-                                 );
+Std_ReturnType MemAcc_BlankCheck(MemAcc_AddressAreaIdType    AddressAreaId,
+                                 MemAcc_AddressType          TargetAddress,
+                                 MemAcc_LengthType           Length
+                                );
 
 
 /**
@@ -583,12 +574,12 @@ Std_ReturnType MemAcc_BlankCheck (MemAcc_AddressAreaIdType    AddressAreaId,
  *
  * @pre              The module has to be initialized.
  */
-Std_ReturnType MemAcc_HwSpecificService (MemAcc_AddressAreaIdType     AddressAreaId,
-                                         MemAcc_HwIdType              HwId,
-                                         MemAcc_MemHwServiceIdType    HwServiceId,
-                                         MemAcc_DataType             *DataPtr,
-                                         MemAcc_LengthType           *LengthPtr
-                                        );
+Std_ReturnType MemAcc_HwSpecificService(MemAcc_AddressAreaIdType     AddressAreaId,
+                                        MemAcc_HwIdType              HwId,
+                                        MemAcc_MemHwServiceIdType    HwServiceId,
+                                        MemAcc_DataType             *DataPtr,
+                                        MemAcc_LengthType           *LengthPtr
+                                       );
 
 
 /**
@@ -610,11 +601,11 @@ Std_ReturnType MemAcc_HwSpecificService (MemAcc_AddressAreaIdType     AddressAre
  *
  * @pre              The module has to be initialized.
  */
-Std_ReturnType MemAcc_RequestLock (MemAcc_AddressAreaIdType            AddressAreaId,
-                                   MemAcc_AddressType                  Address,
-                                   MemAcc_LengthType                   Length,
-                                   MemAcc_ApplicationLockNotification  LockNotificationFctPtr
-                                  );
+Std_ReturnType MemAcc_RequestLock(MemAcc_AddressAreaIdType            AddressAreaId,
+                                  MemAcc_AddressType                  Address,
+                                  MemAcc_LengthType                   Length,
+                                  MemAcc_ApplicationLockNotification  LockNotificationFctPtr
+                                 );
 
 
 /**

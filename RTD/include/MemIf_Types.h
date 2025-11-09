@@ -1,6 +1,6 @@
 /**
 *    @file        MemIf_Types.h
-*    @version     4.0.0
+*    @version     6.0.0
 *
 *    @brief       AUTOSAR MemIf - module interface.
 *    @details     Stub for MemIf module - contains some typedefs needed by other components.
@@ -18,10 +18,10 @@
 *   Autosar Version      : 4.7.0
 *   Autosar Revision     : ASR_REL_4_7_REV_0000
 *   Autosar Conf.Variant :
-*   SW Version           : 4.0.0
-*   Build Version        : S32K3_RTD_4_0_0_HF02_D2407_ASR_REL_4_7_REV_0000_20240725
+*   SW Version           : 6.0.0
+*   Build Version        : S32K3_RTD_6_0_0_D2506_ASR_REL_4_7_REV_0000_20250610
 *
-*   (c) Copyright 2020 - 2024 NXP
+*   (c) Copyright 2020 - 2025 NXP
 *   All Rights Reserved.
 *
 *   NXP Confidential. This software is owned or controlled by NXP and may only be
@@ -62,7 +62,7 @@ extern "C"{
 #define MEMIF_AR_RELEASE_MAJOR_VERSION           4
 #define MEMIF_AR_RELEASE_MINOR_VERSION           7
 #define MEMIF_AR_RELEASE_REVISION_VERSION        0
-#define MEMIF_SW_MAJOR_VERSION                   4
+#define MEMIF_SW_MAJOR_VERSION                   6
 #define MEMIF_SW_MINOR_VERSION                   0
 #define MEMIF_SW_PATCH_VERSION                   0
 

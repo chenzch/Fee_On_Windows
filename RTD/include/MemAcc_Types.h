@@ -7,12 +7,12 @@
 *   Autosar Version      : 4.7.0
 *   Autosar Revision     : ASR_REL_4_7_REV_0000
 *   Autosar Conf.Variant :
-*   SW Version           : 4.0.0
-*   Build Version        : S32K3_RTD_4_0_0_HF02_D2407_ASR_REL_4_7_REV_0000_20240725
+*   SW Version           : 6.0.0
+*   Build Version        : S32K3_RTD_6_0_0_D2506_ASR_REL_4_7_REV_0000_20250610
 *
-*   Copyright 2020 - 2024 NXP
+*   Copyright 2020 - 2025 NXP
 *
-*   NXP Confidential. This software is owned or controlled by NXP and may only be
+*   NXP Confidential and Proprietary. This software is owned or controlled by NXP and may only be
 *   used strictly in accordance with the applicable license terms. By expressly
 *   accepting such terms or by downloading, installing, activating and/or otherwise
 *   using the software, you are agreeing that you have read, and that you agree to
@@ -42,7 +42,7 @@ extern "C"{
 * 2) needed interfaces from external units
 * 3) internal and external interfaces from this unit
 ==================================================================================================*/
-#include "StandardTypes.h"
+#include "Std_Types.h"
 #include "MemAcc_CfgDefines.h"
 
 /*==================================================================================================
@@ -52,7 +52,7 @@ extern "C"{
 #define MEMACC_TYPES_AR_RELEASE_MAJOR_VERSION       4
 #define MEMACC_TYPES_AR_RELEASE_MINOR_VERSION       7
 #define MEMACC_TYPES_AR_RELEASE_REVISION_VERSION    0
-#define MEMACC_TYPES_SW_MAJOR_VERSION               4
+#define MEMACC_TYPES_SW_MAJOR_VERSION               6
 #define MEMACC_TYPES_SW_MINOR_VERSION               0
 #define MEMACC_TYPES_SW_PATCH_VERSION               0
 
@@ -60,11 +60,11 @@ extern "C"{
 *                                       FILE VERSION CHECKS
 ==================================================================================================*/
 #ifndef DISABLE_MCAL_INTERMODULE_ASR_CHECK
-    /* Check if current file and StandardTypes.h file are of the same version */
+    /* Check if current file and Std_Types.h file are of the same version */
     #if ((MEMACC_TYPES_AR_RELEASE_MAJOR_VERSION != STD_AR_RELEASE_MAJOR_VERSION) || \
          (MEMACC_TYPES_AR_RELEASE_MINOR_VERSION != STD_AR_RELEASE_MINOR_VERSION)\
         )
-        #error "AutoSar Version Numbers of MemAcc_Types.h and StandardTypes.h are different"
+        #error "AutoSar Version Numbers of MemAcc_Types.h and Std_Types.h are different"
     #endif
 #endif
 
@@ -109,11 +109,6 @@ extern "C"{
 #define MEMACC_BURST_READ                         (1U << 1U)
 #define MEMACC_BURST_WRITE                        (1U << 2U)
 
-
-/* Job flags */
-#define MEMACC_JOB_FLAG_NONE                       0x00U     /* Initial value                               */
-#define MEMACC_JOB_FLAG_STARTED                    0x01U     /* Indicates that new job has been accepted    */
-#define MEMACC_JOB_FLAG_BURST_MODE                 0x02U     /* Indicates that the job uses burts settings  */
 
 #define MEMACC_MEMSERVICE_COMPARE_API_ID           0x11U     /* Hardware-specific service ID for Compare API */
 
@@ -208,7 +203,7 @@ typedef uint32 MemAcc_MemHwServiceIdType;
 
 /**
 * @brief          MemAcc mem job result type
-* @implements     MemAcc_MemJobResultType_enumeration
+* @implements     MemAcc_MemJobResultType_enum
 */
 typedef enum
 {
@@ -256,7 +251,7 @@ typedef enum
 ==================================================================================================*/
 /**
 * @brief          Asynchronous job result type
-* @implements     MemAcc_JobResultType_enumeration
+* @implements     MemAcc_JobResultType_enum
 */
 typedef enum
 {
@@ -269,18 +264,8 @@ typedef enum
 } MemAcc_JobResultType;
 
 /**
-* @brief          Lock address area status type
-*/
-typedef enum
-{
-    MEMACC_UNLOCK             = 0x00,      /**< @brief The address area is unlock                                                                       */
-    MEMACC_LOCKING            = 0x01,      /**< @brief The address area is locking                                                                      */
-    MEMACC_LOCKED             = 0x02       /**< @brief The address area is locked                                                                       */
-} MemAcc_LockStatusType;
-
-/**
 * @brief          Asynchronous job status type
-* @implements     MemAcc_JobStatusType_enumeration
+* @implements     MemAcc_JobStatusType_enum
 */
 typedef enum
 {
@@ -290,7 +275,7 @@ typedef enum
 
 /**
 * @brief          Type for asynchronous jobs
-* @implements     MemAcc_JobType_enumeration
+* @implements     MemAcc_JobType_enum
 */
 typedef enum
 {
@@ -307,7 +292,7 @@ typedef enum
 
 /**
 * @brief          Internal asynchronous job state transition
-*                 MemAcc_JobStateType_enumeration
+*                 MemAcc_JobStateType_enum
 */
 typedef enum
 {
@@ -317,55 +302,10 @@ typedef enum
     MEMACC_JOB_STATE_SUSPENDING  = 0x03,   /**< @brief The job is being suspended                     */
     MEMACC_JOB_STATE_RESUMING    = 0x04,   /**< @brief The job is being resumed                       */
     MEMACC_JOB_STATE_CANCELING   = 0x05,   /**< @brief The job is being canceled                      */
-    MEMACC_JOB_STATE_STOP        = 0x06    /**< @brief The job is stop                                */
+    MEMACC_JOB_STATE_LOCKING     = 0x06,   /**< @brief The job is being locked                        */
+    MEMACC_JOB_STATE_STOP        = 0x07    /**< @brief The job is stop                                */
 } MemAcc_JobStateType;
 
-#if (MEMACC_MULTICORE_TYPE_1_ENABLED == STD_ON)
-/**
-* @brief          MemAcc Multi Core Request Return Type.
-* @details        The return value for the function requesting multi core access.
-*
-*/
-typedef enum
-{
-    MEMACC_MCORE_ERROR = 0, /**< @brief return error */
-    MEMACC_MCORE_TIMEOUT,   /**< @brief return timeout */
-    MEMACC_MCORE_PENDING,   /**< @brief return pending */
-    MEMACC_MCORE_GRANTED,   /**< @brief return granted */
-    MEMACC_MCORE_CANCELLED  /**< @brief return cancelled */
-} MemAcc_MCoreReqReturnType;
-
-/**
-* @brief          MemAcc Multi Core hardware job status
-* @details        The status of a multi core core flash job, in hardware. Used to determine
-*                 if a flash job subject to multi core arbitration was started/suspended/aborted
-*                 in hardware, in the flash controller. This can be used for example, to
-*                 clear a semaphore granted for erase directly, if the job was not actually started
-*                 in hardware, instead of attempting to suspend it.
-*
-*/
-typedef enum
-{
-    MEMACC_MCORE_HW_JOB_IDLE = 0,       /**< @brief idle status */
-    MEMACC_MCORE_HW_JOB_MAINF_STARTED,  /**< @brief mainf started status */
-    MEMACC_MCORE_HW_JOB_STARTED,        /**< @brief started status */
-    MEMACC_MCORE_HW_JOB_CANCELLED       /**< @brief cancelled status */
-} MemAcc_MCoreHwJobStatusType;
-
-/**
-* @brief          MemAcc Multi Core timeout notification jobs
-* @details        The timeout notification specifies the job during which timeout occurred.
-*
-*/
-typedef enum
-{
-    MEMACC_MCORE_TIMEOUT_ERASE = 0,       /**< @brief timeout job erase */
-    MEMACC_MCORE_TIMEOUT_WRITE,           /**< @brief timeout job write */
-    MEMACC_MCORE_TIMEOUT_READ,            /**< @brief timeout job read */
-    MEMACC_MCORE_TIMEOUT_COMPARE,         /**< @brief timeout job compare */
-    MEMACC_MCORE_TIMEOUT_BLANK_CHECK      /**< @brief timeout job blank check */
-} MemAcc_MCoreTimeoutJobType;
-#endif /* MEMACC_MULTICORE_TYPE_1_ENABLED == STD_ON */
 
 /**
 * @brief         MemAcc Hardware Id Type
@@ -668,17 +608,14 @@ typedef struct
     uint16                              AreaIndex;           /**< @brief The index of address area being processed                                    */
     const MemAcc_SubAddressAreaType    *SubArea;             /**< @brief The start sub address area of the requested job                              */
     /* Runtime information */
-    MemAcc_LengthType                   LengthRemain;        /**< @brief Remaining bytes of data to be processed                                      */
-    MemAcc_LengthType                   LengthChunk;         /**< @brief The amount of data in bytes to be processed each chunk                       */
-    MemAcc_JobStateType                 JobState;            /**< @brief The internal transition state                                                */
-    MemAcc_JobResultType                JobResult;           /**< @brief The result of the most recent job                                            */
-    MemAcc_JobStatusType                JobStatus;           /**< @brief The asynchronous job status                                                  */
-    uint8                               JobRetries;          /**< @brief The number of retries of a failed erase or write job                         */
-    MemAcc_LockStatusType               LockStatus;          /**< @brief The lock status of the address area                                          */
-    boolean                             JobLocked;           /**< @brief The requested job is locked or not                                           */
-    MemAcc_AddressType                  LockAddress;         /**< @brief The start address of locked area                                             */
-    MemAcc_LengthType                   LockLength;          /**< @brief The length of locked area                                                    */
-    MemAcc_ApplicationLockNotification  LockNotif;           /**< @brief The callback function is called when the lock is complete                    */
+    MemAcc_LengthType                   LengthRemain;              /**< @brief Remaining bytes of data to be processed                                      */
+    MemAcc_LengthType                   LengthChunk;               /**< @brief The amount of data in bytes to be processed each chunk                       */
+    MemAcc_JobStateType                 JobState;                  /**< @brief The internal transition state                                                */
+    MemAcc_JobResultType                CurrentConsolidatedResult; /**< @brief This value store consolidated Result of current job                          */
+    MemAcc_JobResultType                JobResult;                 /**< @brief The result of the most recent job                                            */
+    MemAcc_JobStatusType                JobStatus;                 /**< @brief The asynchronous job status                                                  */
+    uint8                               JobRetries;                /**< @brief The number of retries of a failed erase or write job                         */
+    MemAcc_ApplicationLockNotification  LockNotif;                 /**< @brief The callback function is called when the lock is complete                    */
 } MemAcc_JobRuntimeInfoType;
 
 
@@ -694,7 +631,7 @@ typedef struct
     MemAcc_JobRuntimeInfoType      *JobRuntimeInfo;      /**< @brief Point to first element in array of job runtime infomation          */
     const uint32                    MemApiCount;         /**< @brief Number of Mem drivers are used by MemAcc in this configuration set */
     MemAcc_MemApiType              *MemApis;             /**< @brief Mem driver service functions and consistency information           */
-#if (MEMACC_MULTICORE_TYPE_3_ENABLED == STD_ON)
+#if (MEMACC_MULTI_PARTITION_TYPE_3_ENABLED == STD_ON)
     const uint8                    *PartitionList;       /**< @brief Pointer to used partitions                                         */
     const uint32                   *PartitionMapping;    /**< @brief Pointer to AddressArea partition mapping                           */
 #endif

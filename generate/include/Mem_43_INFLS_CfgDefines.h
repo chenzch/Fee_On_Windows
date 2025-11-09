@@ -7,10 +7,10 @@
 *   Autosar Version      : 4.7.0
 *   Autosar Revision     : ASR_REL_4_7_REV_0000
 *   Autosar Conf.Variant :
-*   SW Version           : 4.0.0
-*   Build Version        : S32K3_RTD_4_0_0_HF02_D2407_ASR_REL_4_7_REV_0000_20240725
+*   SW Version           : 6.0.0
+*   Build Version        : S32K3_RTD_6_0_0_D2506_ASR_REL_4_7_REV_0000_20250610
 *
-*   Copyright 2020 - 2024 NXP
+*   Copyright 2020 - 2025 NXP
 *
 *   NXP Confidential and Proprietary. This software is owned or controlled by NXP and may only be
 *   used strictly in accordance with the applicable license terms. By expressly
@@ -52,7 +52,7 @@ extern "C"{
 #define MEM_43_INFLS_AR_RELEASE_MAJOR_VERSION_CFG_DEFINES            4
 #define MEM_43_INFLS_AR_RELEASE_MINOR_VERSION_CFG_DEFINES            7
 #define MEM_43_INFLS_AR_RELEASE_REVISION_VERSION_CFG_DEFINES         0
-#define MEM_43_INFLS_SW_MAJOR_VERSION_CFG_DEFINES                    4
+#define MEM_43_INFLS_SW_MAJOR_VERSION_CFG_DEFINES                    6
 #define MEM_43_INFLS_SW_MINOR_VERSION_CFG_DEFINES                    0
 #define MEM_43_INFLS_SW_PATCH_VERSION_CFG_DEFINES                    0
 
@@ -76,7 +76,7 @@ extern "C"{
 #define MEM_43_INFLS_INTERNAL_UNIT_COUNT                      (1U)
 
 /* Pre-processor switch to enable and disable development error detection */
-#define MEM_43_INFLS_DEV_ERROR_DETECT                         (STD_ON)
+#define MEM_43_INFLS_DEV_ERROR_DETECT                         (STD_OFF)
 
 /* Mem Hardware Compare Service Api */
 #define MEM_43_INFLS_HW_COMPARE_SERVICE                       (STD_OFF)
@@ -90,25 +90,21 @@ extern "C"{
 #define MEM_43_INFLS_MULTICORE_ENABLED                        (STD_OFF)
 
 /* Use the XRDC in RM module to config */
-#define MEM_43_INFLS_USE_XRDC_CONFIG                          (FALSE)
+#define MEM_43_INFLS_USE_XRDC_CONFIG                          (STD_OFF)
 
 #if (STD_ON == MEM_43_INFLS_HW_UTESTMODE_SERVICE)
 /* Number of configured Utest Config */
 #define MEM_43_INFLS_MEM_UTESTCONFIG_COUNT                    (0U)
 #endif
-
-/* Mem Suspend Resume Support Api */
-#define MEM_43_INFLS_SUSPEND_RESUME_SUPPORT                   (STD_OFF)
-
 /* STD_ON: Mem access code loaded on job start / unloaded on job end or error */
-#define MEM_43_INFLS_AC_LOAD_ON_JOB_START                     (STD_OFF)
+#define MEM_43_INFLS_AC_LOAD_ON_JOB_START                     (STD_ON)
 
 /* Enable Sync mode*/
 #define MEM_43_INFLS_SYNC_MODE_ENABLE                         (STD_OFF)
 
 #if (MEM_43_INFLS_AC_LOAD_ON_JOB_START == STD_ON)
     /* Cleaning cache after loading access code to RAM */
-    #define MEM_43_INFLS_CLEAN_CACHE_AFTER_LOAD_AC            (STD_ON)
+    #define MEM_43_INFLS_CLEAN_CACHE_AFTER_LOAD_AC            (STD_OFF)
 #endif
 
 #ifdef __cplusplus

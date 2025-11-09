@@ -7,10 +7,10 @@
 *   Autosar Version      : 4.7.0
 *   Autosar Revision     : ASR_REL_4_7_REV_0000
 *   Autosar Conf.Variant :
-*   SW Version           : 4.0.0
-*   Build Version        : S32K3_RTD_4_0_0_HF02_D2407_ASR_REL_4_7_REV_0000_20240725
+*   SW Version           : 6.0.0
+*   Build Version        : S32K3_RTD_6_0_0_D2506_ASR_REL_4_7_REV_0000_20250610
 *
-*   Copyright 2020 - 2024 NXP
+*   Copyright 2020 - 2025 NXP
 *
 *   NXP Confidential and Proprietary. This software is owned or controlled by NXP and may only be
 *   used strictly in accordance with the applicable license terms. By expressly
@@ -46,8 +46,6 @@ extern "C"{
 #include "Mcal.h"
 #include "C40_Ip_Cfg.h"
 
-#define C40_Ip_AccessCode(X) do { if (X) { (X)(); } } while (0)
-
 /*==================================================================================================
 *                              SOURCE FILE VERSION INFORMATION
 ==================================================================================================*/
@@ -55,7 +53,7 @@ extern "C"{
 #define C40_IP_AR_RELEASE_MAJOR_VERSION_H        4
 #define C40_IP_AR_RELEASE_MINOR_VERSION_H        7
 #define C40_IP_AR_RELEASE_REVISION_VERSION_H     0
-#define C40_IP_SW_MAJOR_VERSION_H                4
+#define C40_IP_SW_MAJOR_VERSION_H                6
 #define C40_IP_SW_MINOR_VERSION_H                0
 #define C40_IP_SW_PATCH_VERSION_H                0
 
@@ -100,6 +98,7 @@ extern "C"{
 #define MEM_43_INFLS_START_SEC_CODE
 #include "Mem_43_INFLS_MemMap.h"
 
+#if (STD_ON == C40_IP_MAIN_INTERFACE_ENABLED)
 /**
  * @brief    Set synch/Asynch at IP layer base on the bAsynch of HLD
  *
@@ -110,6 +109,7 @@ extern "C"{
  *
  */
 void C40_Ip_SetAsyncMode(const boolean Async);
+#endif
 
 #if (STD_ON == C40_IP_SECTOR_SET_LOCK_API)
 /**
@@ -132,8 +132,9 @@ void C40_Ip_SetAsyncMode(const boolean Async);
 
 #endif /* STD_ON == C40_IP_SECTOR_SET_LOCK_API */
 
-#define C40_Ip_ClearLock(A, B) C40_IP_STATUS_SUCCESS
+#define C40_Ip_GetLock(X) C40_IP_STATUS_SECTOR_UNPROTECTED
 
+#define C40_Ip_ClearLock(A, B) C40_IP_STATUS_SUCCESS
 /**
  * @brief        Get sector number from specified address.
  *
@@ -175,11 +176,7 @@ C40_Ip_FlashBlocksNumberType C40_Ip_GetBlockNumberFromAddress(uint32 TargetAddre
  */
 C40_Ip_StatusType C40_Ip_Init(const C40_Ip_ConfigType * InitConfig);
 
-#if (STD_ON == C40_IP_MAIN_INTERFACE_ENABLED)
 #define C40_Ip_Abort() C40_IP_STATUS_SUCCESS
-#else
-#define C40_Ip_Abort() C40_IP_STATUS_ERROR
-#endif
 
 /**
  * @brief        This function fills data to DestAddressPtr
@@ -305,7 +302,13 @@ C40_Ip_StatusType C40_Ip_MainInterfaceWrite(uint32 LogicalAddress,
 #define C40_Ip_MainInterfaceWriteStatus() C40_IP_STATUS_SUCCESS
 #endif /* (STD_ON == C40_IP_MAIN_INTERFACE_ENABLED) */
 
+#if ((C40_IP_ECC_CHECK == STD_ON) || (C40_IP_ECC_CHECK_BY_AUTOSAR_OS == STD_ON))
+/**
+ * @brief Report Ecc UnCorrected Error for IP layer
+ *
+ */
 #define C40_Ip_ReportEccUnCorrectedError() 0
+#endif
 
 #ifdef __cplusplus
 }

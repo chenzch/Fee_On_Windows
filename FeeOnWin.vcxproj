@@ -43,16 +43,19 @@
     <ClInclude Include="include\StandardTypes.h" />
     <ClInclude Include="RTD\include\C40_Ip.h" />
     <ClInclude Include="RTD\include\C40_Ip_Ac.h" />
+    <ClInclude Include="RTD\include\C40_Ip_TrustedFunctions.h" />
     <ClInclude Include="RTD\include\C40_Ip_Types.h" />
     <ClInclude Include="RTD\include\Fee.h" />
     <ClInclude Include="RTD\include\Fee_Cbk.h" />
     <ClInclude Include="RTD\include\Fee_InternalTypes.h" />
     <ClInclude Include="RTD\include\Fee_Types.h" />
     <ClInclude Include="RTD\include\MemAcc.h" />
+    <ClInclude Include="RTD\include\MemAcc_Sema4.h" />
     <ClInclude Include="RTD\include\MemAcc_Types.h" />
     <ClInclude Include="RTD\include\MemIf_Types.h" />
     <ClInclude Include="RTD\include\Mem_43_INFLS.h" />
     <ClInclude Include="RTD\include\Mem_43_INFLS_Ipw.h" />
+    <ClInclude Include="RTD\include\Mem_43_INFLS_Software_Semaphore.h" />
     <ClInclude Include="RTD\include\Mem_43_INFLS_Types.h" />
   </ItemGroup>
   <ItemGroup>
@@ -64,8 +67,10 @@
     <ClCompile Include="RTD\src\C40_Ip.c" />
     <ClCompile Include="RTD\src\Fee.c" />
     <ClCompile Include="RTD\src\MemAcc.c" />
+    <ClCompile Include="RTD\src\MemAcc_Sema4.c" />
     <ClCompile Include="RTD\src\Mem_43_INFLS.c" />
     <ClCompile Include="RTD\src\Mem_43_INFLS_Ipw.c" />
+    <ClCompile Include="RTD\src\Mem_43_INFLS_Software_Semaphore.c" />
     <ClCompile Include="src\main.c" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

@@ -7,18 +7,19 @@
 * Autosar Version      : 4.7.0
 * Autosar Revision     : ASR_REL_4_7_REV_0000
 * Autosar Conf.Variant :
-* SW Version           : 4.0.0
-* Build Version        : S32K3_RTD_4_0_0_HF02_D2407_ASR_REL_4_7_REV_0000_20240725
+* SW Version           : 6.0.0
+* Build Version        : S32K3_RTD_6_0_0_D2506_ASR_REL_4_7_REV_0000_20250610
 *
-* Copyright 2020 - 2024 NXP
+* Copyright 2020 - 2025 NXP
 *
-* NXP Confidential. This software is owned or controlled by NXP and may only be
-* used strictly in accordance with the applicable license terms. By expressly
-* accepting such terms or by downloading, installing, activating and/or otherwise
-* using the software, you are agreeing that you have read, and that you agree to
-* comply with and are bound by, such license terms. If you do not agree to be
-* bound by the applicable license terms, then you may not retain, install,
-* activate or otherwise use the software.
+* NXP Confidential and Proprietary. This software is owned or controlled by NXP and may only be used strictly
+* in accordance with the applicable license terms.  By expressly accepting
+* such terms or by downloading, installing, activating and/or otherwise using
+* the software, you are agreeing that you have read, and that you agree to
+* comply with and are bound by, such license terms.  If you do not agree to
+* be bound by the applicable license terms, then you may not retain,
+* install, activate or otherwise use the software.
+*
 ==================================================================================================*/
 
 #ifndef FEE_INTERNALTYPES_H
@@ -51,7 +52,7 @@ extern "C"{
 #define FEE_INTERNALTYPES_AR_RELEASE_MAJOR_VERSION        4
 #define FEE_INTERNALTYPES_AR_RELEASE_MINOR_VERSION        7
 #define FEE_INTERNALTYPES_AR_RELEASE_REVISION_VERSION     0
-#define FEE_INTERNALTYPES_SW_MAJOR_VERSION                4
+#define FEE_INTERNALTYPES_SW_MAJOR_VERSION                6
 #define FEE_INTERNALTYPES_SW_MINOR_VERSION                0
 #define FEE_INTERNALTYPES_SW_PATCH_VERSION                0
 
@@ -102,7 +103,7 @@ typedef enum
     FEE_BLOCK_INCONSISTENT_COPY  /**< @brief FEE data read error during swap (ie data area was allocated) */
 #else
     FEE_BLOCK_INCONSISTENT_COPY, /**< @brief FEE data read error during swap (ie data area was allocated) */
-    FEE_BLOCK_NEVER_WRITTEN      /**< @brief FEE block was never written in data memacc */
+    FEE_BLOCK_NEVER_WRITTEN      /**< @brief FEE block was never written in data flash */
 #endif
 } Fee_BlockStatusType;
 
@@ -128,14 +129,14 @@ typedef enum
     FEE_JOB_READ = 0,                /**< @brief Read Fee block */
 
     /* Fee_Write() related jobs */
-    FEE_JOB_WRITE,                   /**< @brief Write Fee block to memacc */
-    FEE_JOB_WRITE_DATA,              /**< @brief Write Fee block data to memacc */
-    FEE_JOB_WRITE_UNALIGNED_DATA,    /**< @brief Write unaligned rest of Fee block data to memacc */
-    FEE_JOB_WRITE_VALIDATE,          /**< @brief Validate Fee block by writing validation flag to memacc */
+    FEE_JOB_WRITE,                   /**< @brief Write Fee block to flash */
+    FEE_JOB_WRITE_DATA,              /**< @brief Write Fee block data to flash */
+    FEE_JOB_WRITE_UNALIGNED_DATA,    /**< @brief Write unaligned rest of Fee block data to flash */
+    FEE_JOB_WRITE_VALIDATE,          /**< @brief Validate Fee block by writing validation flag to flash */
     FEE_JOB_WRITE_DONE,              /**< @brief Finalize validation of Fee block */
 
     /* Fee_InvalidateBlock() related jobs */
-    FEE_JOB_INVAL_BLOCK,             /**< @brief Invalidate Fee block by writing the invalidation flag to memacc */
+    FEE_JOB_INVAL_BLOCK,             /**< @brief Invalidate Fee block by writing the invalidation flag to flash */
     FEE_JOB_INVAL_BLOCK_DONE,        /**< @brief Finalize invalidation of Fee block */
 
     /* Fee_EraseImmediateBlock() related jobs */
@@ -155,6 +156,7 @@ typedef enum
     FEE_JOB_INT_SWAP_DATA_READ,      /**< @brief Read data from source cluster to internal Fee buffer */
     FEE_JOB_INT_SWAP_DATA_WRITE,     /**< @brief Write data from internal Fee buffer to target cluster */
     FEE_JOB_INT_SWAP_CLR_VLD_DONE,   /**< @brief Finalize cluster validation */
+    FEE_JOB_INI_SWAP_CANCELED,       /**< @brief Finalize cluster validation */
 
     /* Fee system jobs */
     FEE_JOB_DONE,                    /**< @brief No more subsequent jobs to schedule */
@@ -185,10 +187,10 @@ typedef enum
 */
 typedef struct
 {
-    MemAcc_AddressType DataAddrIt;        /**< @brief Address of current Fee data block in memacc */
-    MemAcc_AddressType HdrAddrIt;         /**< @brief Address of current Fee block header in memacc */
+    uint32 DataAddrIt;        /**< @brief Address of current Fee data block in flash */
+    uint32 HdrAddrIt;         /**< @brief Address of current Fee block header in flash */
     uint32 ActClrID;                   /**< @brief ID of active cluster */
-    uint8 ActClr;                      /**< @brief Index of active cluster */
+    uint32 ActClr;                      /**< @brief Index of active cluster */
 #if (FEE_SUBADDRESSAREA_RETIREMENT == STD_ON)
     Fee_ClusterRuntimeInfoType *ClrInfo;   /**< @brief Pointer to array of Fee cluster runtime infomation */
 #endif
@@ -200,8 +202,8 @@ typedef struct
 */
 typedef struct
 {
-    MemAcc_AddressType DataAddr;          /**< @brief Address of Fee block data in memacc */
-    MemAcc_AddressType InvalidAddr;       /**< @brief Address of Fee block invalidation field in memacc */
+    uint32 DataAddr;          /**< @brief Address of Fee block data in flash */
+    uint32 InvalidAddr;       /**< @brief Address of Fee block invalidation field in flash */
     Fee_BlockStatusType BlockStatus;   /**< @brief Current status of Fee block */
 } Fee_BlockInfoType;
 

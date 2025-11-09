@@ -7,10 +7,10 @@
 *   Autosar Version      : 4.7.0
 *   Autosar Revision     : ASR_REL_4_7_REV_0000
 *   Autosar Conf.Variant :
-*   SW Version           : 4.0.0
-*   Build Version        : S32K3_RTD_4_0_0_HF02_D2407_ASR_REL_4_7_REV_0000_20240725
+*   SW Version           : 6.0.0
+*   Build Version        : S32K3_RTD_6_0_0_D2506_ASR_REL_4_7_REV_0000_20250610
 *
-*   Copyright 2020 - 2024 NXP
+*   Copyright 2020 - 2025 NXP
 *
 *   NXP Confidential and Proprietary. This software is owned or controlled by NXP and may only be
 *   used strictly in accordance with the applicable license terms. By expressly
@@ -44,6 +44,7 @@ extern "C"
 * 2) needed interfaces from external units
 * 3) internal and external interfaces from this unit
 ==================================================================================================*/
+#include "MemAcc_GeneralTypes.h"
 #include "C40_Ip_Types.h"
 #include "Mem_43_INFLS_CfgDefines.h"
 
@@ -54,7 +55,7 @@ extern "C"
 #define MEM_43_INFLS_TYPES_AR_RELEASE_MAJOR_VERSION       4
 #define MEM_43_INFLS_TYPES_AR_RELEASE_MINOR_VERSION       7
 #define MEM_43_INFLS_TYPES_AR_RELEASE_REVISION_VERSION    0
-#define MEM_43_INFLS_TYPES_SW_MAJOR_VERSION               4
+#define MEM_43_INFLS_TYPES_SW_MAJOR_VERSION               6
 #define MEM_43_INFLS_TYPES_SW_MINOR_VERSION               0
 #define MEM_43_INFLS_TYPES_SW_PATCH_VERSION               0
 
@@ -169,7 +170,7 @@ extern "C"
 /**
  * @brief   Service ID of function Mem_43_INFLS_DeInit
 */
-#define MEM_43_INFLS_DEINIT_ID               0x00U
+#define MEM_43_INFLS_DEINIT_ID               0x0BU
 
 /**
  * @brief   Service ID of function Mem_43_INFLS_Init
@@ -248,13 +249,25 @@ extern "C"
 */
 #define MEM_43_INFLS_HWSERVICEID_COMPARE     0x11U
 
-#if (MEM_43_INFLS_HW_UTESTMODE_SERVICE == STD_ON)
-#define  MEM_43_INFLS_HWSERVICEID_ARRAY_INTEGRITY_CHECK 0x31U
-#define MEM_43_INFLS_HWSERVICEID_USER_MARGIN_READ_CHECK 0x32U
+/**
+ *   Hardware specific service request identifier
+ */
 
-#define MEM_43_INFLS_HWSERVICEID_ARRAYINTEGRITYCHECK_SUSPEND 0x33U
-#define MEM_43_INFLS_HWSERVICEID_ARRAYINTEGRITYCHECK_RESUME 0x34U
-#define MEM_43_INFLS_HWSERVICEID_GETSTATEUTEST_JOB          0x35U
+/**
+ * @brief    Define ServiceId for cancel feature
+*/
+#define MEM_43_INFLS_HWSERVICEID_CANCEL     0x12U
+
+#if (MEM_43_INFLS_HW_UTESTMODE_SERVICE == STD_ON)
+#define MEM_43_INFLS_HWSERVICEID_ARRAY_INTEGRITY_CHECK               0x31U
+#define MEM_43_INFLS_HWSERVICEID_USER_MARGIN_READ_CHECK              0x32U
+
+#define MEM_43_INFLS_HWSERVICEID_ARRAYINTEGRITYCHECK_SUSPEND         0x33U
+#define MEM_43_INFLS_HWSERVICEID_ARRAYINTEGRITYCHECK_RESUME          0x34U
+#define MEM_43_INFLS_HWSERVICEID_GETSTATEUTEST_JOB                   0x35U
+#define MEM_43_INFLS_HWSERVICEID_ECC_LOGIC_CHECK                     0x36U
+#define MEM_43_INFLS_HWSERVICEID_EDC_AFTER_ECC_LOGIC_CHECK           0x37U
+#define MEM_43_INFLS_HWSERVICEID_ADDRESS_ENCODE_LOGIC_CHECK          0x38U
 #endif /* (MEM_43_INFLS_HW_UTESTMODE_SERVICE == STD_ON) */
 /**
  * @brief    Define ServiceId Invalid
@@ -267,11 +280,6 @@ extern "C"
 
 
 /* Job flags */
-/**
- * @brief   Initial value
-*/
-#define MEM_43_INFLS_JOB_FLAG_NONE           0x00U
-
 /**
  * @brief   Indicates that new job has been accepted
 */
@@ -375,9 +383,9 @@ typedef enum
     MEM_43_INFLS_JOB_OK                 = 0x00,    /* The last job has been finished successfully                                    */
     MEM_43_INFLS_JOB_PENDING            = 0x01,    /* A job is currently being processed                                             */
     MEM_43_INFLS_JOB_FAILED             = 0x02,    /* Job failed for some unspecific reason                                          */
-    MEM_43_INFLS_JOB_INCONSISTENT       = 0x03,    /* The checked page is not blank                                                  */
-    MEM_43_INFLS_JOB_ECC_UNCORRECTED    = 0x04,    /* Uncorrectable ECC errors occurred during memory access                         */
-    MEM_43_INFLS_JOB_ECC_CORRECTED      = 0x05     /* Correctable ECC errors occurred during memory access                           */
+    MEM_43_INFLS_INCONSISTENT           = 0x03,    /* The checked page is not blank                                                  */
+    MEM_43_INFLS_ECC_UNCORRECTED        = 0x04,    /* Uncorrectable ECC errors occurred during memory access                         */
+    MEM_43_INFLS_ECC_CORRECTED          = 0x05     /* Correctable ECC errors occurred during memory access                           */
 } Mem_43_INFLS_JobResultType;
 
 /**
@@ -428,6 +436,30 @@ typedef enum
     MEM_43_INFLS_UTEST_JOB_USER_TEST_BREAK_SBC          = 0x30U,   /*!< The UTest check operation is broken by Single bit correction */
     MEM_43_INFLS_UTEST_JOB_USER_TEST_BREAK_DBD          = 0x31U    /*!< The UTest check operation is broken by Double bit detection */
 } Mem_43_INFLS_UtestStateType;
+
+/**
+ * @brief          Ecc logic check data type
+ * @details        Ecc Logic Check Data structure to setup ECC logic check and EDC after ECC logic check
+ *                 Mem_43_INFLS_EccLogicCheckDataType
+ */
+typedef struct
+{
+    uint32  AddressCheck;                           /* Physical address of the double words for checking    */
+    uint32  DataValue[2U];                          /* Double words data for cheking                        */
+    uint8   EccDataCheckBitValue;                   /* Bits representing the check bits of all double words */
+} Mem_43_INFLS_EccLogicCheckDataType;
+
+/**
+ * @brief          Address Encode Logic Check Data type
+ * @details        Address Encode Logic Check Data structure to setup Address encode logic check
+ *                 Mem_43_INFLS_AddressEncodeDataType
+ */
+typedef struct
+{
+    uint32  AddressCheck;                           /* Physical address of the double words for checking                    */
+    uint32  InvertBits[2U];                         /* 52 address bits to be inverted into the address encode compare logic */
+} Mem_43_INFLS_AddressEncodeDataType;
+
 #endif /* MEM_43_INFLS_HW_UTESTMODE_SERVICE == STD_ON */
 
 
@@ -534,11 +566,13 @@ typedef struct
 
 typedef struct
 {
-    const Mem_43_INFLS_UtestConfigType    *UtestConfig;           /* The Utest config to be worked with the request job   */
-    const Mem_43_INFLS_MisrType           *MisrSeedValues;        /* The Misr Seed values to be worked with the request job  */
-    const Mem_43_INFLS_MisrType           *MisrExpectedValues;    /* The Misr Expected values to be worked with the request job  */
-    Mem_43_INFLS_UtestStateType            UtestStateType;        /* The state of Utest mode */
-    boolean                                UtestSuspendState;            /* Utest Suspend Job Information */
+    const Mem_43_INFLS_UtestConfigType    *UtestConfig;             /* The Utest config to be worked with the request job   */
+    const Mem_43_INFLS_MisrType           *MisrSeedValues;          /* The Misr Seed values to be worked with the request job  */
+    const Mem_43_INFLS_MisrType           *MisrExpectedValues;      /* The Misr Expected values to be worked with the request job  */
+    Mem_43_INFLS_UtestStateType            UtestStateType;          /* The state of Utest mode */
+    boolean                                UtestSuspendState;       /* Utest Suspend Job Information */
+    Mem_43_INFLS_EccLogicCheckDataType    *UtestEdcEccLogicCheck;   /* The Utest Edc Ecc Logic Check data pointer*/
+    Mem_43_INFLS_AddressEncodeDataType    *UtestAddressEncodeCheck; /* The Utest Address Encode logic Check data pointer*/
 } Mem_43_INFLS_UtestRuntimeConfigType;
 #endif
 /*==================================================================================================
@@ -570,11 +604,8 @@ typedef struct
     /* Runtime information */
     Mem_43_INFLS_JobResultType             JobResult;          /* The result of the most recent job                                  */
     uint8                                  JobFlags;           /* Job information (Started state, burst mode)                        */
-#if (MEM_43_INFLS_SUSPEND_RESUME_SUPPORT == STD_ON)
-    boolean                                SuspendState;       /* Job information (Started state, burst mode)                        */
-#endif
-#if( MEM_43_INFLS_MULTICORE_ENABLED == STD_ON)
-    uint8                                  CoreId;             /* Running coreId                                                     */
+#if (MEM_43_INFLS_MULTICORE_ENABLED == STD_ON)
+    uint8                                  PartitionId;        /* Running PartitionId                                                */
 #endif
 } Mem_43_INFLS_JobRuntimeInfoType;
 

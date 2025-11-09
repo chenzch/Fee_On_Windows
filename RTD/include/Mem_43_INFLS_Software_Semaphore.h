@@ -1,8 +1,8 @@
 /*==================================================================================================
 *   Project              : RTD AUTOSAR 4.7
 *   Platform             : CORTEXM
-*   Peripheral           : none
-*   Dependencies         : MemAcc
+*   Peripheral           : C40
+*   Dependencies         : None
 *
 *   Autosar Version      : 4.7.0
 *   Autosar Revision     : ASR_REL_4_7_REV_0000
@@ -21,13 +21,13 @@
 *   activate or otherwise use the software.
 ==================================================================================================*/
 
-#ifndef MEMACC_PBCFG_H
-#define MEMACC_PBCFG_H
+#ifndef MEM_43_INFLS_SOFTWARE_SEMAPHORE_H
+#define MEM_43_INFLS_SOFTWARE_SEMAPHORE_H
 
 /**
-*   @file MemAcc_PBcfg.h
+*   @file Mem_43_INFLS_Software_Semaphore.h
 *
-*   @addtogroup MEMACC
+*   @addtogroup MEM_43_INFLS
 *   @{
 */
 
@@ -35,6 +35,8 @@
 extern "C"{
 #endif
 
+#include "StandardTypes.h"
+#include "Mem_43_INFLS_Cfg.h"
 
 /*==================================================================================================
 *                                          INCLUDE FILES
@@ -42,55 +44,50 @@ extern "C"{
 * 2) needed interfaces from external units
 * 3) internal and external interfaces from this unit
 ==================================================================================================*/
-#include "MemAcc_Types.h"
 
 
 /*==================================================================================================
 *                                 SOURCE FILE VERSION INFORMATION
 ==================================================================================================*/
-#define MEMACC_PBCFG_VENDOR_ID                      43
-#define MEMACC_PBCFG_AR_RELEASE_MAJOR_VERSION       4
-#define MEMACC_PBCFG_AR_RELEASE_MINOR_VERSION       7
-#define MEMACC_PBCFG_AR_RELEASE_REVISION_VERSION    0
-#define MEMACC_PBCFG_SW_MAJOR_VERSION               6
-#define MEMACC_PBCFG_SW_MINOR_VERSION               0
-#define MEMACC_PBCFG_SW_PATCH_VERSION               0
 
+#define MEM_43_INFLS_SOFTWARE_SEMAPHORE_VENDOR_ID                       43
+#define MEM_43_INFLS_SOFTWARE_SEMAPHORE_AR_RELEASE_MAJOR_VERSION        4
+#define MEM_43_INFLS_SOFTWARE_SEMAPHORE_AR_RELEASE_MINOR_VERSION        7
+#define MEM_43_INFLS_SOFTWARE_SEMAPHORE_AR_RELEASE_REVISION_VERSION     0
+#define MEM_43_INFLS_SOFTWARE_SEMAPHORE_SW_MAJOR_VERSION                6
+#define MEM_43_INFLS_SOFTWARE_SEMAPHORE_SW_MINOR_VERSION                0
+#define MEM_43_INFLS_SOFTWARE_SEMAPHORE_SW_PATCH_VERSION                0
 
 /*==================================================================================================
 *                                       FILE VERSION CHECKS
 ==================================================================================================*/
-
-/* Check if current file and MemAcc_Types.h file are of the same vendor */
-#if (MEMACC_PBCFG_VENDOR_ID != MEMACC_TYPES_VENDOR_ID)
-    #error "MemAcc_PBcfg.h and MemAcc_Types.h have different vendor ids"
+/* Check if current file and Mem_43_INFLS configuration header file are of the same vendor */
+#if (MEM_43_INFLS_SOFTWARE_SEMAPHORE_VENDOR_ID != MEM_43_INFLS_VENDOR_ID_CFG)
+    #error "Mem_43_INFLS_Cfg.h and Mem_43_INFLS_Software_Semaphore.h have different vendor ids"
 #endif
-/* Check if current file and MemAcc_Types.h file are of the same Autosar version */
-#if ((MEMACC_PBCFG_AR_RELEASE_MAJOR_VERSION    != MEMACC_TYPES_AR_RELEASE_MAJOR_VERSION) || \
-     (MEMACC_PBCFG_AR_RELEASE_MINOR_VERSION    != MEMACC_TYPES_AR_RELEASE_MINOR_VERSION) || \
-     (MEMACC_PBCFG_AR_RELEASE_REVISION_VERSION != MEMACC_TYPES_AR_RELEASE_REVISION_VERSION) \
+/* Check if current file and Mem_43_INFLS configuration header file are of the same Autosar version */
+#if ((MEM_43_INFLS_SOFTWARE_SEMAPHORE_AR_RELEASE_MAJOR_VERSION    != MEM_43_INFLS_AR_RELEASE_MAJOR_VERSION_CFG) || \
+     (MEM_43_INFLS_SOFTWARE_SEMAPHORE_AR_RELEASE_MINOR_VERSION    != MEM_43_INFLS_AR_RELEASE_MINOR_VERSION_CFG) || \
+     (MEM_43_INFLS_SOFTWARE_SEMAPHORE_AR_RELEASE_REVISION_VERSION != MEM_43_INFLS_AR_RELEASE_REVISION_VERSION_CFG) \
     )
-    #error "AutoSar Version Numbers of MemAcc_PBcfg.h and MemAcc_Types.h are different"
-#endif
-/* Check if current file and MemAcc_Types.h file are of the same software version */
-#if ((MEMACC_PBCFG_SW_MAJOR_VERSION != MEMACC_TYPES_SW_MAJOR_VERSION) || \
-     (MEMACC_PBCFG_SW_MINOR_VERSION != MEMACC_TYPES_SW_MINOR_VERSION) || \
-     (MEMACC_PBCFG_SW_PATCH_VERSION != MEMACC_TYPES_SW_PATCH_VERSION) \
-    )
-    #error "Software Version Numbers of MemAcc_PBcfg.h and MemAcc_Types.h are different"
+    #error "AutoSar Version Numbers of Mem_43_INFLS_Cfg.h and Mem_43_INFLS_Software_Semaphore.h are different"
 #endif
 
-/*==================================================================================================
-*                                            CONSTANTS
-==================================================================================================*/
+/* Check if current file and Mem_43_INFLS configuration header file are of the same software version */
+#if ((MEM_43_INFLS_SOFTWARE_SEMAPHORE_SW_MAJOR_VERSION != MEM_43_INFLS_SW_MAJOR_VERSION_CFG) || \
+     (MEM_43_INFLS_SOFTWARE_SEMAPHORE_SW_MINOR_VERSION != MEM_43_INFLS_SW_MINOR_VERSION_CFG) || \
+     (MEM_43_INFLS_SOFTWARE_SEMAPHORE_SW_PATCH_VERSION != MEM_43_INFLS_SW_PATCH_VERSION_CFG) \
+    )
+    #error "Software Version Numbers of Mem_43_INFLS_Cfg.h and Mem_43_INFLS_Software_Semaphore.h are different"
+#endif
 
 /*==================================================================================================
 *                                       DEFINES AND MACROS
 ==================================================================================================*/
-#define MEMACC_CONFIG_PB \
-    extern const MemAcc_ConfigType MemAcc_Config;
-/* MemAcc address areas unique id */
-#define MEMACC_ADDRESS_AREA_0_ID        (0U)
+
+/*==================================================================================================
+*                                            CONSTANTS
+==================================================================================================*/
 
 /*==================================================================================================
 *                                              ENUMS
@@ -108,11 +105,48 @@ extern "C"{
 *                                       FUNCTION PROTOTYPES
 ==================================================================================================*/
 
+#if (STD_ON == MEM_43_INFLS_USING_SW_SEMAPHORE)
+
+/**
+ * @brief        The function request lock the sema4 channel.
+ *
+ * @details      Request lock function - request lock sema4 channel for current core on the mem hardware resource.
+ *
+ * @param[in]    None.
+ *
+ * @return       Std_ReturnType
+ *                  - E_OK                   : Lock sema4 successfully.
+ *                  - E_NOT_OK               : Lock sema4 fail.
+ *
+ * @pre          None.
+ *
+ * @api
+ */
+Std_ReturnType         Mem_43_INFLS_Software_Semaphore_RequestLock(void);
+/**
+ * @brief        The function request unlock the sema4 channel.
+ *
+ * @details      Request unlock function - request unlock sema4 channel for current core on the mem hardware resource.
+ *
+ * @param[in]    None.
+ *
+ * @return       Std_ReturnType
+ *                  - E_OK                   : UnLock sema4 successfully.
+ *                  - E_NOT_OK               : UnLock sema4 fail.
+ *
+ *
+ * @pre          None.
+ *
+ * @api
+ */
+Std_ReturnType         Mem_43_INFLS_Software_Semaphore_ReleaseLock(void);
 
 #ifdef __cplusplus
 }
 #endif
 
+#endif  /*#if (STD_ON == MEM_43_INFLS_USING_SW_SEMAPHORE) */
+
 /** @} */
 
-#endif /* MEMACC_PBCFG_H */
+#endif /* MEM_43_INFLS_H */

@@ -7,18 +7,19 @@
 * Autosar Version      : 4.7.0
 * Autosar Revision     : ASR_REL_4_7_REV_0000
 * Autosar Conf.Variant :
-* SW Version           : 4.0.0
-* Build Version        : S32K3_RTD_4_0_0_HF02_D2407_ASR_REL_4_7_REV_0000_20240725
+* SW Version           : 6.0.0
+* Build Version        : S32K3_RTD_6_0_0_D2506_ASR_REL_4_7_REV_0000_20250610
 *
-* Copyright 2020 - 2024 NXP
+* Copyright 2020 - 2025 NXP
 *
-* NXP Confidential. This software is owned or controlled by NXP and may only be
-* used strictly in accordance with the applicable license terms. By expressly
-* accepting such terms or by downloading, installing, activating and/or otherwise
-* using the software, you are agreeing that you have read, and that you agree to
-* comply with and are bound by, such license terms. If you do not agree to be
-* bound by the applicable license terms, then you may not retain, install,
-* activate or otherwise use the software.
+* NXP Confidential and Proprietary. This software is owned or controlled by NXP and may only be used strictly
+* in accordance with the applicable license terms.  By expressly accepting
+* such terms or by downloading, installing, activating and/or otherwise using
+* the software, you are agreeing that you have read, and that you agree to
+* comply with and are bound by, such license terms.  If you do not agree to
+* be bound by the applicable license terms, then you may not retain,
+* install, activate or otherwise use the software.
+*
 ==================================================================================================*/
 
 /**
@@ -54,7 +55,7 @@ extern "C"{
 #define FEE_AR_RELEASE_MAJOR_VERSION_C       4
 #define FEE_AR_RELEASE_MINOR_VERSION_C       7
 #define FEE_AR_RELEASE_REVISION_VERSION_C    0
-#define FEE_SW_MAJOR_VERSION_C               4
+#define FEE_SW_MAJOR_VERSION_C               6
 #define FEE_SW_MINOR_VERSION_C               0
 #define FEE_SW_PATCH_VERSION_C               0
 
@@ -168,7 +169,7 @@ extern "C"{
 */
 #define FEE_SERIALIZE_UINT8(ParamVal, pSerialPtr) \
 { \
-    *((uint8*)((uint32)(pSerialPtr))) = (ParamVal); \
+    *((uint8*)((Fee_UintPtrType)(pSerialPtr))) = (ParamVal); \
     (pSerialPtr) = &((pSerialPtr)[sizeof(uint8)]); \
 }
 /**
@@ -208,13 +209,13 @@ extern "C"{
 * @param[in/out]  pSerialPtr pointer to target buffer
 *
 * @pre            pSerialPtr must be valid pointer
-* @post           increments the pSerialPtr by sizeof(MemAcc_AddressType)
+* @post           increments the pSerialPtr by sizeof(uint32)
 *
 */
 #define FEE_SERIALIZE_ADDRESS(ParamVal, pSerialPtr) \
 { \
-    *((MemAcc_AddressType*)((Fee_UintPtrType)(pSerialPtr))) = (ParamVal); \
-    (pSerialPtr) = &((pSerialPtr)[sizeof(MemAcc_AddressType)]); \
+    *((uint32*)((Fee_UintPtrType)(pSerialPtr))) = (ParamVal); \
+    (pSerialPtr) = &((pSerialPtr)[sizeof(uint32)]); \
 }
 /**
 * @brief          Serialize scalar parameter into the buffer
@@ -223,13 +224,13 @@ extern "C"{
 * @param[in/out]  pSerialPtr pointer to target buffer
 *
 * @pre            pSerialPtr must be valid pointer
-* @post           increments the pSerialPtr by sizeof(MemAcc_LengthType)
+* @post           increments the pSerialPtr by sizeof(uint32)
 *
 */
 #define FEE_SERIALIZE_LENGTH(ParamVal, pSerialPtr) \
 { \
-    *((MemAcc_LengthType*)((Fee_UintPtrType)(pSerialPtr))) = (ParamVal); \
-    (pSerialPtr) = &((pSerialPtr)[sizeof(MemAcc_LengthType)]); \
+    *((uint32*)((Fee_UintPtrType)(pSerialPtr))) = (ParamVal); \
+    (pSerialPtr) = &((pSerialPtr)[sizeof(uint32)]); \
 }
 
 /**
@@ -284,13 +285,13 @@ extern "C"{
 * @param[out]     ParamVal deserialized parameter
 *
 * @pre            pDeserialPtr must be valid pointer
-* @post           increments the pDeserialPtr by sizeof(MemAcc_AddressType)
+* @post           increments the pDeserialPtr by sizeof(uint32)
 *
 */
 #define FEE_DESERIALIZE_ADDRESS(pDeserialPtr, ParamVal) \
 { \
-    (ParamVal) = *(const MemAcc_AddressType*)((Fee_UintPtrType)(pDeserialPtr)); \
-    (pDeserialPtr) = &((pDeserialPtr)[sizeof(MemAcc_AddressType)]); \
+    (ParamVal) = *(const uint32*)((Fee_UintPtrType)(pDeserialPtr)); \
+    (pDeserialPtr) = &((pDeserialPtr)[sizeof(uint32)]); \
 }
 /**
 * @brief          Deserialize scalar parameter from the buffer
@@ -299,13 +300,13 @@ extern "C"{
 * @param[out]     ParamVal deserialized parameter
 *
 * @pre            pDeserialPtr must be valid pointer
-* @post           increments the pDeserialPtr by sizeof(MemAcc_LengthType)
+* @post           increments the pDeserialPtr by sizeof(uint32)
 *
 */
 #define FEE_DESERIALIZE_LENGTH(pDeserialPtr, ParamVal) \
 { \
-    (ParamVal) = *(const MemAcc_LengthType*)((Fee_UintPtrType)(pDeserialPtr)); \
-    (pDeserialPtr) = &((pDeserialPtr)[sizeof(MemAcc_LengthType)]); \
+    (ParamVal) = *(const uint32*)((Fee_UintPtrType)(pDeserialPtr)); \
+    (pDeserialPtr) = &((pDeserialPtr)[sizeof(uint32)]); \
 }
 /*==================================================================================================
 *                                      LOCAL CONSTANTS
@@ -348,7 +349,7 @@ static uint8 Fee_uJobIntClrGrpIt; /* implicit zero initialization */
 /**
 * @brief        Internal cluster iterator. Used by the scan and swap jobs
 */
-static uint8 Fee_uJobIntClrIt; /* implicit zero initialization */
+static uint32 Fee_uJobIntClrIt; /* implicit zero initialization */
 #if (FEE_SUBADDRESSAREA_RETIREMENT == STD_ON)
 /**
 * @brief        Number of attempts when erasing each subAddressArea in the cluster in swap phase
@@ -374,7 +375,7 @@ static uint16 Fee_uJobIntBlockIt; /* implicit zero initialization */
 
 #if (FEE_SWAP_FOREIGN_BLOCKS_ENABLED == STD_ON)
 /**
-* @brief        Used to keep the number of foreign blocks found when parsing the data memacc.
+* @brief        Used to keep the number of foreign blocks found when parsing the data flash.
 *               It represents the number of elements from the Fee_aForeignBlockConfig array.
 */
 static uint16 Fee_uForeignBlocksNumber; /* implicit zero initialization */
@@ -426,28 +427,28 @@ static MemIf_JobResultType Fee_eJobResult; /* implicit zero initialization to ME
 /**
 * @brief        Fee block Offset. Used by the read Fee job
 */
-static MemAcc_LengthType Fee_uJobBlockOffset; /* implicit zero initialization */
+static uint32 Fee_uJobBlockOffset; /* implicit zero initialization */
 
 /**
 * @brief        Number of bytes to read. Used by the read Fee job
 */
-static MemAcc_LengthType Fee_uJobBlockLength; /* implicit zero initialization */
+static uint32 Fee_uJobBlockLength; /* implicit zero initialization */
 
 /**
-* @brief        Internal memacc helper address iterator. Used by the scan and
+* @brief        Internal flash helper address iterator. Used by the scan and
 *               swap jobs
 */
-static MemAcc_AddressType Fee_uJobIntAddrIt; /* implicit zero initialization */
+static uint32 Fee_uJobIntAddrIt; /* implicit zero initialization */
 
 /**
 * @brief        Internal address of current block header. Used by the swap job
 */
-static MemAcc_AddressType Fee_uJobIntHdrAddr; /* implicit zero initialization */
+static uint32 Fee_uJobIntHdrAddr; /* implicit zero initialization */
 
 /**
 * @brief        Internal address of current data block. Used by the swap job.
 */
-static MemAcc_AddressType Fee_uJobIntDataAddr; /* implicit zero initialization */
+static uint32 Fee_uJobIntDataAddr; /* implicit zero initialization */
 
 /**
 * @brief        Run-time information of all configured Fee blocks. Contains
@@ -476,7 +477,7 @@ static Fee_TranslationJobType Fee_eTransJob; /* implicit zero initialization to 
 /**
 * @brief        Number of bytes to read. Used by the Fee translation jobs
 */
-static MemAcc_AddressType Fee_uTransJobLength; /* implicit zero initialization */
+static uint32 Fee_uTransJobLength; /* implicit zero initialization */
 
 /**
 * @brief        Point to current cluster. Used by the Fee translation jobs
@@ -491,7 +492,7 @@ static Fee_SubAddressAreaRuntimeInfoType *Fee_pTransJobSubAddressArea; /* implic
 /**
 * @brief        Pointer to internal data buffer. Used by the Fee translation jobs read and write
 */
-static MemAcc_AddressType Fee_pTransJobBuffer; /* implicit zero initialization */
+static uint32 Fee_pTransJobBuffer; /* implicit zero initialization */
 #endif
 #define FEE_STOP_SEC_VAR_CLEARED_UNSPECIFIED
 #include "Fee_MemMap.h"
@@ -519,7 +520,7 @@ FEE_NVM_CLUSTER_FORMAT_NOTIFICATION_DECL
 ==================================================================================================*/
 
 static void Fee_SerializeBlockHdr(const Fee_BlockType *BlockHder,
-                                  const MemAcc_AddressType TargetAddress,
+                                  const uint32 TargetAddress,
 #if (FEE_SWAP_FOREIGN_BLOCKS_ENABLED == STD_ON)
                                   const Fee_BlockAssignmentType BlockAssignment,
 #endif
@@ -531,7 +532,7 @@ static Std_ReturnType Fee_BlankCheck(const uint8 *TargetPtr, const uint8 *const 
 static Std_ReturnType Fee_DeserializeFlag(const uint8 *const TargetPtr, const uint8 FlagPattern, boolean *pFlagValue);
 
 static Fee_BlockStatusType Fee_DeserializeBlockHdr(Fee_BlockType *const BlockHder,
-                                                   MemAcc_AddressType *const TargetAddress,
+                                                   uint32 *const TargetAddress,
 #if (FEE_SWAP_FOREIGN_BLOCKS_ENABLED == STD_ON)
                                                    uint8 *const BlockAssignment,
 #endif
@@ -553,8 +554,6 @@ static uint16 Fee_GetForeignBlockIndex(const uint16 BlockNumber);
 
 static inline Fee_BlockAssignmentType Fee_GetBlockAssignment(const uint16 BlockRuntimeInfoIndex);
 
-static inline boolean Fee_IsForeignBlock(Fee_BlockAssignmentType BlockAssignment);
-
 static inline MemIf_JobResultType Fee_UpdateForeignBlockConfigInfo(uint16 *ForeignBlockIndex,
                                                                    const Fee_BlockType *BlockHder,
                                                                    Fee_BlockAssignmentType BlockAssignment
@@ -571,13 +570,15 @@ static inline boolean Fee_GetBlockImmediate(const uint16 BlockRuntimeInfoIndex);
 
 static inline void Fee_TranferJobResultMemAccToMemif(MemAcc_JobResultType MemAcc_JobResult);
 
-static uint16 Fee_AlignToVirtualPageSize(uint16 BlockSize);
+static uint32 Fee_AlignToVirtualPageSize(uint16 BlockSize);
 
 static void Fee_CopyDataToPageBuffer(const uint8 *SourcePtr, uint8 *TargetPtr, const uint16 Length);
 
 static void Fee_SerializeFlag(uint8 *TargetPtr, const uint8 FlagPattern);
 
 static MemIf_JobResultType Fee_JobInternalSwapClusterVld(void);
+
+static void Fee_JobGetHdrBlock(Fee_BlockType *BlockHder);
 
 static MemIf_JobResultType Fee_JobInternalSwapBlock(void);
 
@@ -601,6 +602,11 @@ static MemIf_JobResultType Fee_JobInternalScanClusterFmtDone(void);
 
 static MemIf_JobResultType Fee_JobInternalScanBlockHdrParse(const boolean BufferValid);
 
+static MemIf_JobResultType Fee_JobCheckBlockHeaderMatchesFeeConfigOrNot(uint16 BlockIndex,
+                                                                        uint16 BlockRuntimeInfoIndex,
+                                                                        const Fee_BlockType *BlockHder,
+                                                                        uint32 DataAddr,
+                                                                        Fee_BlockStatusType BlockStatus);
 static inline boolean Fee_JobInternalScanClusterHdrDone(void);
 
 static MemIf_JobResultType Fee_JobInternalScanClusterHdrRead(void);
@@ -662,12 +668,12 @@ static inline void Fee_UntouchReservedAreaAll(void);
 static inline boolean Fee_IsBlockMatchedConfig(uint16 BlockIndex,
                                                uint16 BlockRuntimeInfoIndex,
                                                const Fee_BlockType *BlockHder,
-                                               MemAcc_AddressType DataAddr
+                                               uint32 DataAddr
                                               );
 
 static inline void Fee_UpdateBlockRuntimeInfo(uint16 BlockRuntimeInfoIndex,
                                               Fee_BlockStatusType BlockStatus,
-                                              MemAcc_AddressType DataAddr,
+                                              uint32 DataAddr,
                                               boolean ImmediateBlock
                                              );
 #if (FEE_SUBADDRESSAREA_RETIREMENT == STD_ON)
@@ -677,26 +683,26 @@ static void Fee_GetSubAddressAreaRunTimeInfo(uint8 ClrGrpIndex,
                                             );
 
 #if (FEE_NUMBER_OF_SUBADDRESSAREAS_TO_RECOVER > 0U)
-static MemAcc_LengthType Fee_GetRecoverSubAddressAreaSize(const Fee_SubAddressAreaRuntimeInfoType *BadSubAddressArea);
+static uint32 Fee_GetRecoverSubAddressAreaSize(const Fee_SubAddressAreaRuntimeInfoType *BadSubAddressArea);
 
 static void Fee_RecoverBadSubAddressAreas(Fee_ClusterRuntimeInfoType *Cluster);
 #endif
 
 static MemIf_JobResultType Fee_TransJobSchedule(void);
 
-static Std_ReturnType Fee_TranslationJobRead(MemAcc_LengthType OffsetAddress);
+static Std_ReturnType Fee_TranslationJobRead(uint32 OffsetAddress);
 
-static Std_ReturnType Fee_TranslationJobWrite(MemAcc_LengthType OffsetAddress);
+static Std_ReturnType Fee_TranslationJobWrite(uint32 OffsetAddress);
 
 static Std_ReturnType Fee_TranslationJobErase(void);
 
 static Std_ReturnType Fee_TranslationJobEraseFailed(void);
 
-static MemAcc_LengthType Fee_CalcMaxTransferLength(MemAcc_AddressType *LogicalAddress,
-                                                   MemAcc_LengthType OffsetAddress
+static uint32 Fee_CalcMaxTransferLength(uint32 *LogicalAddress,
+                                                   uint32 OffsetAddress
                                                    );
 
-static MemAcc_LengthType Fee_CalcTransferOffset(MemAcc_AddressType emulationAddress);
+static uint32 Fee_CalcTransferOffset(uint32 emulationAddress);
 
 static uint32 Fee_SerializeSubAddressAreasInfo(const Fee_ClusterRuntimeInfoType *ClrInfo,
                                                uint8 *ClrHdrPtr
@@ -707,33 +713,37 @@ static Std_ReturnType Fee_DeserializeSubAddressAreasInfo(Fee_ClusterRuntimeInfoT
                                                         );
 
 static inline Fee_SubAddressAreaRuntimeInfoType * Fee_GetLastSubAddressAreaList(uint8 ClrGrpIt,
-                                                                                uint8 ClrIt
+                                                                                uint32 ClrIt
                                                                                );
 
-static boolean Fee_ClusterUsable(MemAcc_LengthType ClusterLength);
+static boolean Fee_ClusterUsable(uint32 ClusterLength);
 
 #endif /* FEE_SUBADDRESSAREA_RETIREMENT == STD_ON */
-static Std_ReturnType Fee_ReadFromMemAcc(MemAcc_AddressType SourceAddress,
+static Std_ReturnType Fee_CallMemAccRead(uint32 SourceAddress,
                                          const uint8 *TargetAddressPtr,
-                                         MemAcc_LengthType Length
+                                         uint32 Length
                                         );
 
-static Std_ReturnType Fee_WriteToMemAcc(MemAcc_AddressType TargetAddress,
+static Std_ReturnType Fee_CallMemAccWrite(uint32 TargetAddress,
                                         const uint8 *SourceAddressPtr,
-                                        MemAcc_LengthType Length
+                                        uint32 Length
                                        );
 
 static Std_ReturnType Fee_EraseCluster(uint8 ClrGrpIt,
-                                       uint8 ClrIt
+                                       uint32 ClrIt
                                       );
 
-static inline MemAcc_LengthType Fee_GetClusterLength(uint8 ClrGrpIt,
-                                                     uint8 ClrIt
-                                                    );
+static inline uint32 Fee_GetClusterLength(uint8 ClrGrpIt,
+                                          uint32 ClrIt
+                                         );
 
-static inline uint8 Fee_GetNextClusterToSwap(uint8 CurrentCluster);
+static inline uint32 Fee_GetNextClusterToSwap(uint32 CurrentCluster);
 
-static void Fee_DoJobErrorNotification(void);
+static void Fee_DoJobErrorNotification(MemAcc_JobResultType JobResult);
+
+static void Fee_ContinueHandleInternalJob(void);
+
+static void Fee_HandleInternalJobAfterCancel(void);
 
 #define FEE_STOP_SEC_CODE
 #include "Fee_MemMap.h"
@@ -812,42 +822,42 @@ static inline MemIf_JobResultType Fee_JobSystemDone(void)
 *            with the enumeration Fee_JobType from Fee_InternalTypes.h
 *
 */
-static MemIf_JobResultType (*Fee_JobScheduleLookupTable[])(void) =
+static MemIf_JobResultType (*const Fee_JobScheduleLookupTable[])(void) =
 {
     /* Fee_Read() related jobs */
-    Fee_JobReadBlock,                                /* FEE_JOB_READ */
+    &Fee_JobReadBlock,                                /* FEE_JOB_READ */
 
     /* Fee_Write() related jobs */
-    Fee_JobWriteBlock,                               /* FEE_JOB_WRITE */
-    Fee_JobWriteBlockData,                           /* FEE_JOB_WRITE_DATA */
-    Fee_JobWriteBlockUnalignedData,                  /* FEE_JOB_WRITE_UNALIGNED_DATA */
-    Fee_JobWriteBlockValidate,                       /* FEE_JOB_WRITE_VALIDATE */
-    Fee_JobWriteBlockDone,                           /* FEE_JOB_WRITE_DONE */
+    &Fee_JobWriteBlock,                               /* FEE_JOB_WRITE */
+    &Fee_JobWriteBlockData,                           /* FEE_JOB_WRITE_DATA */
+    &Fee_JobWriteBlockUnalignedData,                  /* FEE_JOB_WRITE_UNALIGNED_DATA */
+    &Fee_JobWriteBlockValidate,                       /* FEE_JOB_WRITE_VALIDATE */
+    &Fee_JobWriteBlockDone,                           /* FEE_JOB_WRITE_DONE */
 
     /* Fee_InvalidateBlock() related jobs */
-    Fee_JobInvalidateBlock,                          /* FEE_JOB_INVAL_BLOCK */
-    Fee_JobInvalidateBlockDone,                      /* FEE_JOB_INVAL_BLOCK_DONE */
+    &Fee_JobInvalidateBlock,                          /* FEE_JOB_INVAL_BLOCK */
+    &Fee_JobInvalidateBlockDone,                      /* FEE_JOB_INVAL_BLOCK_DONE */
 
     /* Fee_EraseImmediateBlock() related jobs */
-    Fee_JobEraseImmediateBlock,                      /* FEE_JOB_ERASE_IMMEDIATE */
+    &Fee_JobEraseImmediateBlock,                      /* FEE_JOB_ERASE_IMMEDIATE */
 
     /* Fee_Init() realted jobs */
-    Fee_JobInternalScan,                             /* FEE_JOB_INT_SCAN */
-    Fee_JobInternalScanCluster,                      /* FEE_JOB_INT_SCAN_CLR */
-    Fee_JobInternalScanClusterHdrParse_Wrapper,      /* FEE_JOB_INT_SCAN_CLR_HDR_PARSE */
-    Fee_JobInternalScanClusterFmt,                   /* FEE_JOB_INT_SCAN_CLR_FMT */
-    Fee_JobInternalScanClusterFmtDone,               /* FEE_JOB_INT_SCAN_CLR_FMT_DONE */
-    Fee_JobInternalScanBlockHdrParse_Wrapper,        /* FEE_JOB_INT_SCAN_BLOCK_HDR_PARSE */
+    &Fee_JobInternalScan,                             /* FEE_JOB_INT_SCAN */
+    &Fee_JobInternalScanCluster,                      /* FEE_JOB_INT_SCAN_CLR */
+    &Fee_JobInternalScanClusterHdrParse_Wrapper,      /* FEE_JOB_INT_SCAN_CLR_HDR_PARSE */
+    &Fee_JobInternalScanClusterFmt,                   /* FEE_JOB_INT_SCAN_CLR_FMT */
+    &Fee_JobInternalScanClusterFmtDone,               /* FEE_JOB_INT_SCAN_CLR_FMT_DONE */
+    &Fee_JobInternalScanBlockHdrParse_Wrapper,        /* FEE_JOB_INT_SCAN_BLOCK_HDR_PARSE */
 
     /* Internal swap jobs */
-    Fee_JobInternalSwapClusterFmt,                   /* FEE_JOB_INT_SWAP_CLR_FMT */
-    Fee_JobInternalSwapBlock,                        /* FEE_JOB_INT_SWAP_BLOCK */
-    Fee_JobInternalSwapDataRead_Wrapper,             /* FEE_JOB_INT_SWAP_DATA_READ */
-    Fee_JobInternalSwapDataWrite_Wrapper,            /* FEE_JOB_INT_SWAP_DATA_WRITE */
-    Fee_JobInternalSwapClusterVldDone,               /* FEE_JOB_INT_SWAP_CLR_VLD_DONE */
+    &Fee_JobInternalSwapClusterFmt,                   /* FEE_JOB_INT_SWAP_CLR_FMT */
+    &Fee_JobInternalSwapBlock,                        /* FEE_JOB_INT_SWAP_BLOCK */
+    &Fee_JobInternalSwapDataRead_Wrapper,             /* FEE_JOB_INT_SWAP_DATA_READ */
+    &Fee_JobInternalSwapDataWrite_Wrapper,            /* FEE_JOB_INT_SWAP_DATA_WRITE */
+    &Fee_JobInternalSwapClusterVldDone,               /* FEE_JOB_INT_SWAP_CLR_VLD_DONE */
 
     /* Fee system jobs done */
-    Fee_JobSystemDone,                               /* FEE_JOB_DONE */
+    &Fee_JobSystemDone,                               /* FEE_JOB_DONE */
 };
 
 #define FEE_STOP_SEC_CONST_32
@@ -909,7 +919,7 @@ static inline uint8 Fee_GetBlockClusterGrp(const uint16 BlockRuntimeInfoIndex)
 static inline boolean Fee_ReservedAreaTargetedInClrGrp(const uint8 ClrGrpIndex)
 {
     boolean RetVal;
-    MemAcc_LengthType AvailClrSpace;
+    uint32 AvailClrSpace;
     uint32 ReservedSpace;
 
     /* Reserved space of cluster group*/
@@ -1068,7 +1078,7 @@ static inline void Fee_UntouchReservedAreaAll(void)
 * @brief        Serialize Fee block parameters into a write buffer
 *
 * @param[in]    BlockHder       hder block (block number and Length)
-* @param[in]    TargetAddress   Logical address of Fee block in MemAcc adress
+* @param[in]    TargetAddress   Logical address of Fee block in flash adress
 *                                space
 * @param[out]   BlockHdrPtr     Pointer to serialization buffer
 *
@@ -1076,7 +1086,7 @@ static inline void Fee_UntouchReservedAreaAll(void)
 *
 */
 static void Fee_SerializeBlockHdr(const Fee_BlockType *BlockHder,
-                                  const MemAcc_AddressType TargetAddress,
+                                  const uint32 TargetAddress,
 #if (FEE_SWAP_FOREIGN_BLOCKS_ENABLED == STD_ON)
                                   const Fee_BlockAssignmentType BlockAssignment,
 #endif
@@ -1203,7 +1213,7 @@ static Std_ReturnType Fee_DeserializeFlag(const uint8 *const TargetPtr, const ui
 * @brief        Deserialize Fee block header parameters from read buffer
 *
 * @param[out]   BlockHder               Fee BlockHder( Pblock number and Length)
-* @param[out]   TargetAddress           Logical address of Fee block in MemAcc adress space
+* @param[out]   TargetAddress           Logical address of Fee block in flash adress space
 * @param[in]    BlockHdrPtr             Pointer to read buffer
 *
 * @return       Fee_BlockStatusType
@@ -1217,7 +1227,7 @@ static Std_ReturnType Fee_DeserializeFlag(const uint8 *const TargetPtr, const ui
 *
 */
 static Fee_BlockStatusType Fee_DeserializeBlockHdr(Fee_BlockType *const BlockHder,
-                                                   MemAcc_AddressType *const TargetAddress,
+                                                   uint32 *const TargetAddress,
 #if (FEE_SWAP_FOREIGN_BLOCKS_ENABLED == STD_ON)
                                                    uint8 *const BlockAssignment,
 #endif
@@ -1405,7 +1415,7 @@ static Std_ReturnType Fee_DeserializeSubAddressAreasInfo(Fee_ClusterRuntimeInfoT
 * @brief        Deserialize Fee cluster header parameters from read buffer
 *
 * @param[out]   pClrID                     32-bit cluster ID
-* @param[out]   pStartAddress              Logical address of Fee cluster in MemAcc address space
+* @param[out]   pStartAddress              Logical address of Fee cluster in flash address space
 * @param[out]   pClusteSize                Size of Fee cluster in bytes
 * @param[in]    ClrHdrPtr                 Pointer to read buffer
 *
@@ -1811,26 +1821,26 @@ static inline boolean Fee_GetBlockImmediate(const uint16 BlockRuntimeInfoIndex)
 *
 * @param[in]    BlockSize        Fee block size (FeeBlockSize)
 *
-* @return       uint16
+* @return       uint32
 * @retval       Adjusted          Fee block size to integer multiple of FEE_VIRTUAL_PAGE_SIZE
 *
 */
-static uint16 Fee_AlignToVirtualPageSize(uint16 BlockSize)
+static uint32 Fee_AlignToVirtualPageSize(uint16 BlockSize)
 {
-    uint16 Retval = 0U;
+    uint32 Retval = 0U;
 
     /* Check whether the block size is integer multiple of FEE_VIRTUAL_PAGE_SIZE */
     if (0U == (BlockSize % FEE_VIRTUAL_PAGE_SIZE))
     {
         /* block size is an integer multiple of FEE_VIRTUAL_PAGE_SIZE */
-        Retval = BlockSize;
+        Retval = (uint32)BlockSize;
     }
     else
     {
-        Retval = ((BlockSize / FEE_VIRTUAL_PAGE_SIZE) + 1U) * FEE_VIRTUAL_PAGE_SIZE;
+        Retval = (((uint32)BlockSize / FEE_VIRTUAL_PAGE_SIZE) + 1U) * FEE_VIRTUAL_PAGE_SIZE;
     }
 
-    return((uint16)Retval);
+    return((uint32)Retval);
 }
 
 /**
@@ -1893,7 +1903,7 @@ static void Fee_SerializeFlag(uint8 *TargetPtr, const uint8 FlagPattern)
 
 /**
 * @brief        Validate current Fee cluster in current Fee cluster group by
-*               writing FEE_VALIDATED_VALUE into memacc
+*               writing FEE_VALIDATED_VALUE into flash
 *
 * @return       MemIf_JobResultType
 * @retval       MEMIF_JOB_PENDING        Underlying MemAcc accepted the write job
@@ -1907,7 +1917,7 @@ static void Fee_SerializeFlag(uint8 *TargetPtr, const uint8 FlagPattern)
 static MemIf_JobResultType Fee_JobInternalSwapClusterVld(void)
 {
     MemIf_JobResultType RetVal;
-    MemAcc_AddressType StartAddr;
+    uint32 StartAddr;
 
     /* Get start address of swap cluster */
     StartAddr = Fee_ClrGrps[Fee_uJobIntClrGrpIt].ClrPtr[Fee_uJobIntClrIt].StartAddr;
@@ -1915,8 +1925,8 @@ static MemIf_JobResultType Fee_JobInternalSwapClusterVld(void)
     /* Serialize validation pattern to write buffer */
     Fee_SerializeFlag(Fee_aDataBuffer, FEE_VALIDATED_VALUE);
 
-    /* Write validation pattern to memacc */
-    if (((Std_ReturnType)E_OK) == Fee_WriteToMemAcc((StartAddr + FEE_CLUSTER_OVERHEAD) - (2U * FEE_VIRTUAL_PAGE_SIZE),
+    /* Write validation pattern to flash */
+    if (((Std_ReturnType)E_OK) == Fee_CallMemAccWrite((StartAddr + FEE_CLUSTER_OVERHEAD) - (2U * FEE_VIRTUAL_PAGE_SIZE),
                                                   Fee_aDataBuffer, FEE_VIRTUAL_PAGE_SIZE
                                                  )
        )
@@ -1936,6 +1946,16 @@ static MemIf_JobResultType Fee_JobInternalSwapClusterVld(void)
     return RetVal;
 }
 
+
+static void Fee_JobGetHdrBlock(Fee_BlockType *BlockHder)
+{
+    /* get size of block */
+    BlockHder->Length = Fee_GetBlockSize(Fee_uJobIntBlockIt);
+    /* get ImmediateBlock of block */
+    BlockHder->ImmediateBlock = Fee_GetBlockImmediate(Fee_uJobIntBlockIt);
+    /* get BlockNumber of block */
+    BlockHder->BlockNumber = Fee_GetBlockNumber(Fee_uJobIntBlockIt);
+}
 /**
 * @brief        Copy next block from source to target cluster
 *
@@ -1961,9 +1981,9 @@ static MemIf_JobResultType Fee_JobInternalSwapClusterVld(void)
 static MemIf_JobResultType Fee_JobInternalSwapBlock(void)
 {
     MemIf_JobResultType RetVal;
-    MemAcc_AddressType DataAddr;
+    uint32 DataAddr;
     Fee_BlockType BlockHder;
-    uint16 AlignedBlockSize;
+    uint32 AlignedBlockSize;
     uint8 BlockClusterGrp;
 
 #if (FEE_SWAP_FOREIGN_BLOCKS_ENABLED == STD_ON)
@@ -2006,9 +2026,8 @@ static MemIf_JobResultType Fee_JobInternalSwapBlock(void)
     }
     else
     {
-        BlockHder.Length = Fee_GetBlockSize(Fee_uJobIntBlockIt);
-        BlockHder.ImmediateBlock = Fee_GetBlockImmediate(Fee_uJobIntBlockIt);
-        BlockHder.BlockNumber = Fee_GetBlockNumber(Fee_uJobIntBlockIt);
+        /* Get header of block */
+        Fee_JobGetHdrBlock(&BlockHder);
 
         #if (FEE_SWAP_FOREIGN_BLOCKS_ENABLED == STD_ON)
         BlockAssignment = Fee_GetBlockAssignment(Fee_uJobIntBlockIt);
@@ -2055,8 +2074,8 @@ static MemIf_JobResultType Fee_JobInternalSwapBlock(void)
             Fee_eJob = FEE_JOB_INT_SWAP_BLOCK;
         }
 
-        /* Write header block to memacc */
-        if (((Std_ReturnType)E_OK) != Fee_WriteToMemAcc(Fee_uJobIntHdrAddr, Fee_aDataBuffer, FEE_BLOCK_OVERHEAD - (2U * FEE_VIRTUAL_PAGE_SIZE)))
+        /* Write header block to flash memory */
+        if (((Std_ReturnType)E_OK) != Fee_CallMemAccWrite(Fee_uJobIntHdrAddr, Fee_aDataBuffer, FEE_BLOCK_OVERHEAD - (2U * FEE_VIRTUAL_PAGE_SIZE)))
         {
             /* MemAcc write job hasn't been accepted */
             RetVal = MEMIF_JOB_FAILED;
@@ -2080,13 +2099,13 @@ static MemIf_JobResultType Fee_JobInternalSwapBlock(void)
 *               If not, a new swap phase will be scheduled.
 *
 */
-static boolean Fee_ClusterUsable(MemAcc_LengthType ClusterLength)
+static boolean Fee_ClusterUsable(uint32 ClusterLength)
 {
     boolean RetVal;
     uint16 BlockIt;
     uint16 BlockSize;
     uint8 BlockClusterGrp;
-    MemAcc_LengthType uNeededSize = (MemAcc_LengthType)FEE_CLUSTER_OVERHEAD;
+    uint32 uNeededSize = (uint32)FEE_CLUSTER_OVERHEAD;
 
 #if (FEE_SWAP_FOREIGN_BLOCKS_ENABLED == STD_ON)
     uint16 uTotalBlocks = FEE_CRT_CFG_NR_OF_BLOCKS + Fee_uForeignBlocksNumber;
@@ -2107,24 +2126,24 @@ static boolean Fee_ClusterUsable(MemAcc_LengthType ClusterLength)
             )
            )
         {
-            uNeededSize += (MemAcc_LengthType)FEE_BLOCK_OVERHEAD;
+            uNeededSize += (uint32)FEE_BLOCK_OVERHEAD;
 
             BlockSize   = Fee_GetBlockSize(BlockIt);
-            uNeededSize += (MemAcc_LengthType)Fee_AlignToVirtualPageSize(BlockSize);
+            uNeededSize += (uint32)Fee_AlignToVirtualPageSize(BlockSize);
         }
     }
 
     /* Only count the new block to write in case it's not an immediate one */
     if (FALSE == Fee_GetBlockImmediate(Fee_uJobBlockIndex))
     {
-        uNeededSize += (MemAcc_LengthType)FEE_BLOCK_OVERHEAD;
+        uNeededSize += (uint32)FEE_BLOCK_OVERHEAD;
 
         BlockSize   = Fee_GetBlockSize(Fee_uJobBlockIndex);
-        uNeededSize += (MemAcc_LengthType)Fee_AlignToVirtualPageSize(BlockSize);
+        uNeededSize += (uint32)Fee_AlignToVirtualPageSize(BlockSize);
     }
 
     /* Reserved space of this cluster group*/
-    uNeededSize += (MemAcc_LengthType)Fee_ClrGrps[Fee_uJobIntClrGrpIt].ReservedSize;
+    uNeededSize += (uint32)Fee_ClrGrps[Fee_uJobIntClrGrpIt].ReservedSize;
 
     /* Now compare the two sizes */
     if (ClusterLength >= uNeededSize)
@@ -2160,8 +2179,8 @@ static boolean Fee_ClusterUsable(MemAcc_LengthType ClusterLength)
 static MemIf_JobResultType Fee_JobInternalSwapRetry(void)
 {
     MemIf_JobResultType RetVal = MEMIF_JOB_FAILED;
-    uint8 CurrentCluster;
-    uint8 NextCluster;
+    uint32 CurrentCluster;
+    uint32 NextCluster;
 
     /* Get cluster index of swap job */
     CurrentCluster = Fee_aClrGrpInfo[Fee_uJobIntClrGrpIt].ActClr;
@@ -2197,7 +2216,7 @@ static MemIf_JobResultType Fee_JobInternalSwapClusterFmt(void)
 {
     MemIf_JobResultType RetVal;
     Fee_ClusterHeaderType ClrHdr;
-    MemAcc_LengthType ClusterLength;
+    uint32 ClusterLength;
 
     ClusterLength = Fee_GetClusterLength(Fee_uJobIntClrGrpIt, Fee_uJobIntClrIt);
 #if (FEE_SUBADDRESSAREA_RETIREMENT == STD_ON)
@@ -2219,8 +2238,8 @@ static MemIf_JobResultType Fee_JobInternalSwapClusterFmt(void)
         /* Build cluster header with new ActClrID + 1 */
         Fee_SerializeClusterHdr(&ClrHdr, Fee_aDataBuffer);
 
-        /* Write the cluster header to memacc */
-        if (((Std_ReturnType)E_OK) == Fee_WriteToMemAcc(ClrHdr.StartAddr, Fee_aDataBuffer, FEE_CLUSTER_OVERHEAD - (2U * FEE_VIRTUAL_PAGE_SIZE)))
+        /* Write the cluster header to flash memory */
+        if (((Std_ReturnType)E_OK) == Fee_CallMemAccWrite(ClrHdr.StartAddr, Fee_aDataBuffer, FEE_CLUSTER_OVERHEAD - (2U * FEE_VIRTUAL_PAGE_SIZE)))
         {
             /* MemAcc read job has been accepted */
             RetVal = MEMIF_JOB_PENDING;
@@ -2287,9 +2306,10 @@ static MemIf_JobResultType Fee_JobInternalSwapClusterErase(void)
 *
 * @return       The index of the next cluster to be erased in the group
 */
-static inline uint8 Fee_GetNextClusterToSwap(uint8 CurrentCluster)
+static inline uint32 Fee_GetNextClusterToSwap(uint32 CurrentCluster)
 {
-    uint8 NextCluster = CurrentCluster;
+    uint32 NextCluster = CurrentCluster;
+
 #if (FEE_SUBADDRESSAREA_RETIREMENT == STD_ON)
     /* Check if this group cluster was bad (all clusters were bad) */
     if (0U != Fee_GetClusterLength(Fee_uJobIntClrGrpIt, CurrentCluster))
@@ -2348,8 +2368,8 @@ static inline uint8 Fee_GetNextClusterToSwap(uint8 CurrentCluster)
 static MemIf_JobResultType Fee_JobInternalSwap(void)
 {
     MemIf_JobResultType RetVal = MEMIF_JOB_FAILED;
-    uint8 CurrentCluster;
-    uint8 NextCluster;
+    uint32 CurrentCluster;
+    uint32 NextCluster;
 
     /* Get cluster index the block belongs to */
     CurrentCluster = Fee_aClrGrpInfo[Fee_uJobIntClrGrpIt].ActClr;
@@ -2389,7 +2409,7 @@ static MemIf_JobResultType Fee_JobInternalScanBlockHdrRead(void)
     MemIf_JobResultType RetVal = MEMIF_JOB_OK;
 
     /* Read the block header */
-    if (((Std_ReturnType)E_OK) != Fee_ReadFromMemAcc(Fee_uJobIntAddrIt, Fee_aDataBuffer, FEE_BLOCK_OVERHEAD))
+    if (((Std_ReturnType)E_OK) != Fee_CallMemAccRead(Fee_uJobIntAddrIt, Fee_aDataBuffer, FEE_BLOCK_OVERHEAD))
     {
         /* MemAcc read job hasn't been accepted */
         RetVal = MEMIF_JOB_FAILED;
@@ -2461,9 +2481,9 @@ static MemIf_JobResultType Fee_JobInternalScanClusterErase(void)
 static MemIf_JobResultType Fee_JobInternalScanCluster(void)
 {
     MemIf_JobResultType RetVal = MEMIF_JOB_OK;
-    uint8 ClrIndex;
-    MemAcc_AddressType ClrStartAddr;
-    MemAcc_LengthType ClrLength;
+    uint32 ClrIndex;
+    uint32 ClrStartAddr;
+    uint32 ClrLength;
 
     if (FEE_NUMBER_OF_CLUSTER_GROUPS == Fee_uJobIntClrGrpIt)
     {
@@ -2510,7 +2530,7 @@ static MemIf_JobResultType Fee_JobInternalScanCluster(void)
 
 /**
 * @brief        Format first Fee cluster in current Fee cluster group by writing
-*               cluster header into memacc
+*               cluster header into flash memory
 *
 * @return       MemIf_JobResultType
 * @retval       MEMIF_JOB_PENDING        Underlying MemAcc accepted the erase job
@@ -2524,7 +2544,7 @@ static MemIf_JobResultType Fee_JobInternalScanClusterFmt(void)
 {
     MemIf_JobResultType RetVal;
     Fee_ClusterHeaderType ClrHdr;
-    MemAcc_LengthType ClusterLength;
+    uint32 ClusterLength;
 
     ClusterLength = Fee_GetClusterLength(Fee_uJobIntClrGrpIt, Fee_uJobIntClrIt);
 #if (FEE_SUBADDRESSAREA_RETIREMENT == STD_ON)
@@ -2558,8 +2578,8 @@ static MemIf_JobResultType Fee_JobInternalScanClusterFmt(void)
         /* Make the cluster valid right away as it's empty anyway... */
         Fee_SerializeFlag(&Fee_aDataBuffer[FEE_CLUSTER_HEADER_STATUS_OFFSET], FEE_VALIDATED_VALUE);
 
-        /* Write the cluster header to memacc */
-        if (((Std_ReturnType)E_OK) == Fee_WriteToMemAcc(ClrHdr.StartAddr, Fee_aDataBuffer, FEE_CLUSTER_OVERHEAD - FEE_VIRTUAL_PAGE_SIZE))
+        /* Write the cluster header to flash memory */
+        if (((Std_ReturnType)E_OK) == Fee_CallMemAccWrite(ClrHdr.StartAddr, Fee_aDataBuffer, FEE_CLUSTER_OVERHEAD - FEE_VIRTUAL_PAGE_SIZE))
         {
             /* MemAcc read job has been accepted */
             RetVal = MEMIF_JOB_PENDING;
@@ -2600,8 +2620,8 @@ static MemIf_JobResultType Fee_JobInternalScanClusterFmt(void)
 static MemIf_JobResultType Fee_JobInternalScanClusterFmtDone(void)
 {
     MemIf_JobResultType RetVal;
-    MemAcc_AddressType ClrStartAddr;
-    MemAcc_LengthType ClrLength;
+    uint32 ClrStartAddr;
+    uint32 ClrLength;
 
     /* Assign Index and ID of active cluster */
     Fee_aClrGrpInfo[Fee_uJobIntClrGrpIt].ActClr = Fee_uJobIntClrIt;
@@ -2633,11 +2653,11 @@ static MemIf_JobResultType Fee_JobInternalScanClusterFmtDone(void)
 static inline boolean Fee_IsBlockMatchedConfig(uint16 BlockIndex,
                                                uint16 BlockRuntimeInfoIndex,
                                                const Fee_BlockType *BlockHder,
-                                               MemAcc_AddressType DataAddr
+                                               uint32 DataAddr
                                               )
 {
     boolean RetVal = TRUE;
-    uint16 AlignedBlockSize;
+    uint32 AlignedBlockSize;
 
     if ( (0xFFFFU != BlockIndex) || (0xFFFFU != BlockRuntimeInfoIndex) )
     {
@@ -2679,7 +2699,7 @@ static inline boolean Fee_IsBlockMatchedConfig(uint16 BlockIndex,
 */
 static inline void Fee_UpdateBlockRuntimeInfo(uint16 BlockRuntimeInfoIndex,
                                               Fee_BlockStatusType BlockStatus,
-                                              MemAcc_AddressType DataAddr,
+                                              uint32 DataAddr,
                                               boolean ImmediateBlock
                                              )
 {
@@ -2754,19 +2774,6 @@ static inline void Fee_UpdateBlockRuntimeInfo(uint16 BlockRuntimeInfoIndex,
 }
 
 #if (FEE_SWAP_FOREIGN_BLOCKS_ENABLED == STD_ON)
-/**
-* @brief        Check if the block is foreign or not
-*
-*/
-static inline boolean Fee_IsForeignBlock(Fee_BlockAssignmentType BlockAssignment)
-{
-    /* Check if the block is foreign or not */
-#if (FEE_BOOTLOADER_CONFIG == STD_ON)
-    return (FEE_PROJECT_APPLICATION == BlockAssignment);
-#else
-    return (FEE_PROJECT_BOOTLOADER == BlockAssignment);
-#endif
-}
 
 /**
 * @brief        Update foreign block configuration information
@@ -2814,6 +2821,40 @@ static inline MemIf_JobResultType Fee_UpdateForeignBlockConfigInfo(uint16 *Forei
 }
 #endif /* FEE_SWAP_FOREIGN_BLOCKS_ENABLED == STD_ON */
 
+static MemIf_JobResultType Fee_JobCheckBlockHeaderMatchesFeeConfigOrNot(uint16 BlockIndex,
+                                                                        uint16 BlockRuntimeInfoIndex,
+                                                                        const Fee_BlockType *BlockHder,
+                                                                        uint32 DataAddr,
+                                                                        Fee_BlockStatusType BlockStatus)
+{
+    MemIf_JobResultType RetVal;
+    uint16 TempBlockRuntimeInfoIndex = BlockRuntimeInfoIndex;
+
+    /* If block header matches Fee config and its data pointer is in an acceptable area: update its runtime info */
+    if (TRUE == Fee_IsBlockMatchedConfig(BlockIndex, TempBlockRuntimeInfoIndex, BlockHder, DataAddr))
+    {
+        /* No foreign blocks found, use the index from our configuration */
+        if (0xFFFFU == TempBlockRuntimeInfoIndex)
+        {
+            TempBlockRuntimeInfoIndex = BlockIndex;
+        }
+        Fee_UpdateBlockRuntimeInfo(TempBlockRuntimeInfoIndex, BlockStatus, DataAddr, BlockHder->ImmediateBlock);
+    }
+    else
+    {
+        /* 1. Invalid block number (removed from Fee config...) next write cluster swap occurs. Or */
+        /* 2. Block header doesn't match Fee config or the FEE algorithm... during next write cluster swap occurs */
+        bSwapToBePerformed = TRUE;
+    }
+    /* Move on to next block header */
+    Fee_uJobIntAddrIt += FEE_BLOCK_OVERHEAD;
+    /* Update the block header pointer */
+    Fee_aClrGrpInfo[Fee_uJobIntClrGrpIt].HdrAddrIt = Fee_uJobIntAddrIt;
+    /* Read next header */
+    RetVal = Fee_JobInternalScanBlockHdrRead();
+
+    return RetVal;
+}
 /**
 * @brief        Parse Fee block header
 *
@@ -2846,10 +2887,11 @@ static MemIf_JobResultType Fee_JobInternalScanBlockHdrParse(const boolean Buffer
     MemIf_JobResultType RetVal = MEMIF_JOB_OK;
     Fee_BlockStatusType BlockStatus;
     Fee_BlockType BlockHder;
-    MemAcc_AddressType DataAddr = 0U;
+    uint32 DataAddr = 0U;
     uint16 BlockIndex;
     uint16 BlockRuntimeInfoIndex = 0xFFFFU;  /* Default value: invalid block number */
     BlockHder.ImmediateBlock = FALSE;
+    BlockHder.Length = 0U;
 #if (FEE_SWAP_FOREIGN_BLOCKS_ENABLED == STD_ON)
     Fee_BlockAssignmentType BlockAssignment = FEE_PROJECT_RESERVED;
     uint16 ForeignBlockIndex;
@@ -2905,7 +2947,13 @@ static MemIf_JobResultType Fee_JobInternalScanBlockHdrParse(const boolean Buffer
 
 #if (FEE_SWAP_FOREIGN_BLOCKS_ENABLED == STD_ON)
         /* Check if block was not found in the configuration and it is a foreign block */
-        if ( (0xFFFFU == BlockIndex) && Fee_IsForeignBlock(BlockAssignment) )
+        if ( (0xFFFFU == BlockIndex) &&
+#if (FEE_BOOTLOADER_CONFIG == STD_ON)
+             (FEE_PROJECT_APPLICATION == BlockAssignment)
+#else
+             (FEE_PROJECT_BOOTLOADER == BlockAssignment)
+#endif
+           )
         {
             /* search for block index in the foreign blocks config */
             ForeignBlockIndex = Fee_GetForeignBlockIndex(BlockHder.BlockNumber);
@@ -2917,36 +2965,32 @@ static MemIf_JobResultType Fee_JobInternalScanBlockHdrParse(const boolean Buffer
         }
 #endif
 
+#if (FEE_SWAP_FOREIGN_BLOCKS_ENABLED == STD_ON)
         if (MEMIF_JOB_OK == RetVal)
         {
-            /* If block header matches Fee config and its data pointer is in an acceptable area: update its runtime info */
-            if (TRUE == Fee_IsBlockMatchedConfig(BlockIndex, BlockRuntimeInfoIndex, &BlockHder, DataAddr))
-            {
-                /* No foreign blocks found, use the index from our configuration */
-                if (0xFFFFU == BlockRuntimeInfoIndex)
-                {
-                    BlockRuntimeInfoIndex = BlockIndex;
-                }
-                Fee_UpdateBlockRuntimeInfo(BlockRuntimeInfoIndex, BlockStatus, DataAddr, BlockHder.ImmediateBlock);
+#endif
+            /* fix "CHECKED_RETURN" misra violation */
+            /* BlockIndex = 0xFFFFU is handled inside function Fee_JobCheckBlockHeaderMatchesFeeConfigOrNot so pass direct value "0xFFFFU" is no problem */
+            if (0xFFFFU == BlockIndex)
+            {  
+                RetVal = Fee_JobCheckBlockHeaderMatchesFeeConfigOrNot(0xFFFFU,
+                                                                      BlockRuntimeInfoIndex,
+                                                                      &BlockHder,
+                                                                      DataAddr,
+                                                                      BlockStatus);
             }
             else
             {
-                /* 1. Invalid block number (removed from Fee config...) next write cluster swap occurs. Or */
-                /* 2. Block header doesn't match Fee config or the FEE algorithm... during next write cluster swap occurs */
-                bSwapToBePerformed = TRUE;
+                RetVal = Fee_JobCheckBlockHeaderMatchesFeeConfigOrNot(BlockIndex,
+                                                                      BlockRuntimeInfoIndex,
+                                                                      &BlockHder,
+                                                                      DataAddr,
+                                                                      BlockStatus);
             }
-
-            /* Move on to next block header */
-            Fee_uJobIntAddrIt += FEE_BLOCK_OVERHEAD;
-
-            /* Update the block header pointer */
-            Fee_aClrGrpInfo[Fee_uJobIntClrGrpIt].HdrAddrIt = Fee_uJobIntAddrIt;
-
-            /* Read next header */
-            RetVal = Fee_JobInternalScanBlockHdrRead();
+#if (FEE_SWAP_FOREIGN_BLOCKS_ENABLED == STD_ON)
         }
+#endif
     }
-
     return RetVal;
 }
 
@@ -2965,7 +3009,7 @@ static MemIf_JobResultType Fee_JobInternalScanBlockHdrParse(const boolean Buffer
 static MemIf_JobResultType Fee_JobInternalScanClusterHdrRead(void)
 {
     MemIf_JobResultType RetVal;
-    MemAcc_AddressType ReadAddress;
+    uint32 ReadAddress;
 #if (FEE_SUBADDRESSAREA_RETIREMENT == STD_ON)
     /* Get address of current subAddressArea */
     ReadAddress = Fee_pTransJobSubAddressArea->SubAddressAreaAddr;
@@ -2997,7 +3041,7 @@ static MemIf_JobResultType Fee_JobInternalScanClusterHdrRead(void)
 *
 */
 static inline Fee_SubAddressAreaRuntimeInfoType * Fee_GetLastSubAddressAreaList(uint8 ClrGrpIt,
-                                                                                uint8 ClrIt
+                                                                                uint32 ClrIt
                                                                                 )
 {
     uint16 uSubAddressAreaCount = Fee_aClrGrpInfo[ClrGrpIt].ClrInfo[ClrIt].SubAddressAreaCount;
@@ -3095,9 +3139,9 @@ static MemIf_JobResultType Fee_JobInternalScanClusterHdrParse(const boolean Buff
 {
     MemIf_JobResultType RetVal;
     Fee_ClusterStatusType ClrStatus;
-    MemAcc_AddressType CfgStartAddr;
+    uint32 CfgStartAddr;
     Fee_ClusterHeaderType ClrHdr;
-    MemAcc_LengthType CfgClrSize;
+    uint32 CfgClrSize;
     boolean bScanClusterDone = FALSE;
 #if (FEE_SUBADDRESSAREA_RETIREMENT == STD_ON)
     boolean ScanSubAddressAreasDone = FALSE;
@@ -3185,13 +3229,13 @@ static MemIf_JobResultType Fee_JobReadBlock(void)
 {
     MemIf_JobResultType RetVal = MEMIF_JOB_FAILED;
     Fee_BlockStatusType BlockStatus = FEE_BLOCK_VALID;
-    MemAcc_AddressType BlockAddress = 0UL;
+    uint32 BlockAddress = 0UL;
     BlockStatus = Fee_aBlockInfo[Fee_uJobBlockIndex].BlockStatus;
     BlockAddress = Fee_aBlockInfo[Fee_uJobBlockIndex].DataAddr;
 
     if (FEE_BLOCK_VALID == BlockStatus)
     {
-        if (((Std_ReturnType)E_OK) != Fee_ReadFromMemAcc(BlockAddress+Fee_uJobBlockOffset, Fee_pJobReadDataDestPtr, Fee_uJobBlockLength))
+        if (((Std_ReturnType)E_OK) != Fee_CallMemAccRead(BlockAddress+Fee_uJobBlockOffset, Fee_pJobReadDataDestPtr, Fee_uJobBlockLength))
         {
             /* MemAcc read job hasn't been accepted */
             RetVal = MEMIF_JOB_FAILED;
@@ -3248,8 +3292,8 @@ static MemIf_JobResultType Fee_JobInternalSwapBlockVld(void)
 
     /* Serialize validation pattern to buffer */
     Fee_SerializeFlag(Fee_aDataBuffer, FEE_VALIDATED_VALUE);
-    /* Write header to memacc */
-    if (((Std_ReturnType)E_OK) != Fee_WriteToMemAcc(Fee_uJobIntHdrAddr - (2U*FEE_VIRTUAL_PAGE_SIZE), Fee_aDataBuffer, FEE_VIRTUAL_PAGE_SIZE))
+    /* Write header to flash memory */
+    if (((Std_ReturnType)E_OK) != Fee_CallMemAccWrite(Fee_uJobIntHdrAddr - (2U*FEE_VIRTUAL_PAGE_SIZE), Fee_aDataBuffer, FEE_VIRTUAL_PAGE_SIZE))
     {
         /* MemAcc read job hasn't been accepted */
         RetVal = MEMIF_JOB_FAILED;
@@ -3290,8 +3334,8 @@ static MemIf_JobResultType Fee_JobInternalSwapBlockVld(void)
 static MemIf_JobResultType Fee_JobInternalSwapDataRead(const boolean BufferValid)
 {
     MemIf_JobResultType RetVal;
-    MemAcc_AddressType ReadAddr;
-    uint16 AlignedBlockSize;
+    uint32 ReadAddr;
+    uint32 AlignedBlockSize;
     uint16 BlockSize;
 
     /* Get size of swapped block */
@@ -3336,7 +3380,7 @@ static MemIf_JobResultType Fee_JobInternalSwapDataRead(const boolean BufferValid
         ReadAddr = (Fee_aBlockInfo[Fee_uJobIntBlockIt].DataAddr + Fee_uJobIntAddrIt) - Fee_uJobIntDataAddr;
 
         /* Read the block data */
-        if (((Std_ReturnType)E_OK) != Fee_ReadFromMemAcc(ReadAddr, Fee_aDataBuffer, Fee_uJobBlockLength))
+        if (((Std_ReturnType)E_OK) != Fee_CallMemAccRead(ReadAddr, Fee_aDataBuffer, Fee_uJobBlockLength))
         {
             /* MemAcc read job hasn't been accepted */
             RetVal = MEMIF_JOB_FAILED;
@@ -3377,7 +3421,7 @@ static MemIf_JobResultType Fee_JobInternalSwapDataWrite(const boolean BufferVali
 
     if (TRUE == BufferValid)
     {
-        if (((Std_ReturnType)E_OK) == Fee_WriteToMemAcc(Fee_uJobIntAddrIt, Fee_aDataBuffer, Fee_uJobBlockLength))
+        if (((Std_ReturnType)E_OK) == Fee_CallMemAccWrite(Fee_uJobIntAddrIt, Fee_aDataBuffer, Fee_uJobBlockLength))
         {
             /* MemAcc read job has been accepted */
             RetVal = MEMIF_JOB_PENDING;
@@ -3421,12 +3465,12 @@ static MemIf_JobResultType Fee_JobInternalSwapDataWrite(const boolean BufferVali
 */
 static MemIf_JobResultType Fee_JobInternalSwapClusterVldDone(void)
 {
-    MemIf_JobResultType RetVal;
+    MemIf_JobResultType RetVal = MEMIF_JOB_OK;
     uint16 BlockIt;
-    MemAcc_AddressType HdrAddrIt;
-    MemAcc_AddressType DataAddrIt;
+    uint32 HdrAddrIt;
+    uint32 DataAddrIt;
     uint16 BlockSize;
-    uint16 AlignedBlockSize;
+    uint32 AlignedBlockSize;
     uint8 BlockClusterGrp;
 
 #if (FEE_BLOCK_ALWAYS_AVAILABLE == STD_ON)
@@ -3469,7 +3513,7 @@ static MemIf_JobResultType Fee_JobInternalSwapClusterVldDone(void)
                     BlockSize = Fee_GetBlockSize(BlockIt);
                     /* Align block size to the virtual page boundary */
                     AlignedBlockSize = Fee_AlignToVirtualPageSize(BlockSize);
-                    /* "Allocate" data already swapped (written to the memacc) */
+                    /* "Allocate" data already swapped (written to the flash memory) */
                     DataAddrIt -= AlignedBlockSize;
                     /* store the data address to the block runtime record */
                     Fee_aBlockInfo[BlockIt].DataAddr = DataAddrIt;
@@ -3486,7 +3530,7 @@ static MemIf_JobResultType Fee_JobInternalSwapClusterVldDone(void)
                     BlockSize = Fee_GetBlockSize(BlockIt);
                     /* Align block size to the virtual page boundary */
                     AlignedBlockSize = Fee_AlignToVirtualPageSize(BlockSize);
-                    /* "Allocate" data already swapped (written to the memacc) */
+                    /* "Allocate" data already swapped (written to the flash memory) */
                     DataAddrIt -= AlignedBlockSize;
                     /* Damaged data read during copy, but already allocated => inconsistent */
                     Fee_aBlockInfo[ BlockIt ].BlockStatus = FEE_BLOCK_INCONSISTENT;
@@ -3521,19 +3565,22 @@ static MemIf_JobResultType Fee_JobInternalSwapClusterVldDone(void)
         /* Do nothing */
     }
 
-    /* Internal job has finished so transition from MEMIF_BUSYINTERNAL to MEMIF_BUSY */
-    Fee_eModuleStatus = MEMIF_BUSY;
+    if (FEE_JOB_INI_SWAP_CANCELED != Fee_eJobIntOriginalJob)
+    {
+        /* Internal job has finished so transition from MEMIF_BUSYINTERNAL to MEMIF_BUSY */
+        Fee_eModuleStatus = MEMIF_BUSY;
 
-    /* And now cross fingers and re-schedule original job ... */
-    Fee_eJob = Fee_eJobIntOriginalJob;
+        /* And now cross fingers and re-schedule original job ... */
+        Fee_eJob = Fee_eJobIntOriginalJob;
 
-    RetVal = Fee_JobScheduleAfterSwapClusterVldDone();
+        RetVal = Fee_JobScheduleAfterSwapClusterVldDone();
+    }
 
     return RetVal;
 }
 
 /**
-* @brief        Write Fee block header to memacc
+* @brief        Write Fee block header to flash memory
 *
 * @return       MemIf_JobResultType
 * @retval       MEMIF_JOB_PENDING        Underlying MemAcc accepted the write job
@@ -3551,10 +3598,10 @@ static MemIf_JobResultType Fee_JobWriteHdr(void)
 {
     MemIf_JobResultType RetVal;
     Fee_BlockType BlockHder;
-    uint16 AlignedBlockSize;
+    uint32 AlignedBlockSize;
     uint8 ClrGrpIndex;
-    MemAcc_AddressType DataAddr;
-    MemAcc_AddressType HdrAddr;
+    uint32 DataAddr;
+    uint32 HdrAddr;
 
 #if (FEE_SWAP_FOREIGN_BLOCKS_ENABLED == STD_ON)
     if (Fee_uJobBlockIndex >= FEE_CRT_CFG_NR_OF_BLOCKS)
@@ -3605,8 +3652,8 @@ static MemIf_JobResultType Fee_JobWriteHdr(void)
                                   Fee_aDataBuffer
                                  );
 
-            /* Write header to memacc */
-            if (((Std_ReturnType)E_OK) != Fee_WriteToMemAcc(HdrAddr, Fee_aDataBuffer, FEE_BLOCK_OVERHEAD - (2U * FEE_VIRTUAL_PAGE_SIZE)))
+            /* Write header to flash memory */
+            if (((Std_ReturnType)E_OK) != Fee_CallMemAccWrite(HdrAddr, Fee_aDataBuffer, FEE_BLOCK_OVERHEAD - (2U * FEE_VIRTUAL_PAGE_SIZE)))
             {
                 /* MemAcc read job hasn't been accepted */
                 RetVal = MEMIF_JOB_FAILED;
@@ -3624,7 +3671,7 @@ static MemIf_JobResultType Fee_JobWriteHdr(void)
 }
 
 /**
-* @brief        Write Fee block data to memacc
+* @brief        Write Fee block data to flash memory
 *
 * @return       MemIf_JobResultType
 * @retval       MEMIF_JOB_PENDING        Underlying MemAcc accepted the write job
@@ -3642,11 +3689,11 @@ static MemIf_JobResultType Fee_JobWriteHdr(void)
 */
 static MemIf_JobResultType Fee_JobWriteBlockData(void)
 {
-    MemAcc_AddressType DataAddr;
+    uint32 DataAddr;
     MemIf_JobResultType RetVal;
     uint16 BlockSize;
-    uint16 AlignedBlockSize;
-    MemAcc_LengthType WriteLength;
+    uint32 AlignedBlockSize;
+    uint32 WriteLength;
     uint8 ClrGrp;
     const uint8 *WriteDataPtr;
 
@@ -3655,7 +3702,7 @@ static MemIf_JobResultType Fee_JobWriteBlockData(void)
 #endif
 
 #if (FEE_BLOCK_ALWAYS_AVAILABLE == STD_OFF)
-    MemAcc_AddressType HdrAddr;
+    uint32 HdrAddr;
     uint8 ClrGrpIndex;
 #endif
 
@@ -3750,7 +3797,7 @@ static MemIf_JobResultType Fee_JobWriteBlockData(void)
 
         DataAddr = Fee_aClrGrpInfo[ClrGrp].DataAddrIt;
 
-        if (((Std_ReturnType)E_OK) == Fee_WriteToMemAcc(DataAddr, WriteDataPtr,WriteLength))
+        if (((Std_ReturnType)E_OK) == Fee_CallMemAccWrite(DataAddr, WriteDataPtr,WriteLength))
         {
             /* MemAcc write job has been accepted */
             RetVal = MEMIF_JOB_PENDING;
@@ -3767,7 +3814,7 @@ static MemIf_JobResultType Fee_JobWriteBlockData(void)
 }
 
 /**
-* @brief        Write Fee block to memacc
+* @brief        Write Fee block to flash memory
 *
 * @return       MemIf_JobResultType
 * @retval       MEMIF_JOB_PENDING Underlying MemAcc accepted the write job
@@ -3821,7 +3868,7 @@ static MemIf_JobResultType Fee_JobWriteBlock(void)
 }
 
 /**
-* @brief        Write unaligned rest of Fee block data to memacc
+* @brief        Write unaligned rest of Fee block data to flash memory
 *
 * @return       MemIf_JobResultType
 * @retval       MEMIF_JOB_PENDING        Underlying MemAcc accepted the write job
@@ -3836,7 +3883,7 @@ static MemIf_JobResultType Fee_JobWriteBlock(void)
 static MemIf_JobResultType Fee_JobWriteBlockUnalignedData(void)
 {
     MemIf_JobResultType RetVal;
-    MemAcc_AddressType DataAddr;
+    uint32 DataAddr;
     uint16 WriteOffset;
     uint16 WriteLength;
     uint16 BlockSize;
@@ -3885,7 +3932,7 @@ static MemIf_JobResultType Fee_JobWriteBlockUnalignedData(void)
         DataAddr = Fee_aBlockInfo[Fee_uJobBlockIndex].DataAddr;
 #endif
 
-        if (((Std_ReturnType)E_OK) == Fee_WriteToMemAcc(DataAddr+WriteOffset, Fee_aDataBuffer, FEE_VIRTUAL_PAGE_SIZE))
+        if (((Std_ReturnType)E_OK) == Fee_CallMemAccWrite(DataAddr+WriteOffset, Fee_aDataBuffer, FEE_VIRTUAL_PAGE_SIZE))
         {
             /* MemAcc write job has been accepted */
             RetVal = MEMIF_JOB_PENDING;
@@ -3905,7 +3952,7 @@ static MemIf_JobResultType Fee_JobWriteBlockUnalignedData(void)
 }
 
 /**
-* @brief        Validate Fee block by writing validation flag to memacc
+* @brief        Validate Fee block by writing validation flag to flash memory
 *
 * @return       MemIf_JobResultType
 * @retval       MEMIF_JOB_PENDING        Underlying MemAcc accepted the write job
@@ -3919,7 +3966,7 @@ static MemIf_JobResultType Fee_JobWriteBlockUnalignedData(void)
 static MemIf_JobResultType Fee_JobWriteBlockValidate(void)
 {
     MemIf_JobResultType RetVal;
-    MemAcc_AddressType HdrAddr;
+    uint32 HdrAddr;
 
 #if (FEE_BLOCK_ALWAYS_AVAILABLE == STD_ON)
     uint8 ClrGrpIndex;
@@ -3955,8 +4002,8 @@ static MemIf_JobResultType Fee_JobWriteBlockValidate(void)
         HdrAddr = Fee_aBlockInfo[Fee_uJobBlockIndex].InvalidAddr - FEE_VIRTUAL_PAGE_SIZE;
 #endif
 
-        /* Write validation pattern to memacc */
-        if (((Std_ReturnType)E_OK) == Fee_WriteToMemAcc(HdrAddr, Fee_aDataBuffer, FEE_VIRTUAL_PAGE_SIZE))
+        /* Write validation pattern to flash memory */
+        if (((Std_ReturnType)E_OK) == Fee_CallMemAccWrite(HdrAddr, Fee_aDataBuffer, FEE_VIRTUAL_PAGE_SIZE))
         {
             /* MemAcc read job has been accepted */
             RetVal = MEMIF_JOB_PENDING;
@@ -3990,8 +4037,8 @@ static MemIf_JobResultType Fee_JobWriteBlockValidate(void)
 static MemIf_JobResultType Fee_JobWriteBlockDone(void)
 {
 #if (FEE_BLOCK_ALWAYS_AVAILABLE == STD_ON)
-    MemAcc_AddressType DataAddr;
-    MemAcc_AddressType HdrAddr;
+    uint32 DataAddr;
+    uint32 HdrAddr;
     uint8 ClrGrpIndex;
 
     /* Index of cluster group the Fee block belongs to */
@@ -4016,7 +4063,7 @@ static MemIf_JobResultType Fee_JobWriteBlockDone(void)
 }
 
 /**
-* @brief        Invalidate Fee block by writing the invalidation flag to memacc
+* @brief        Invalidate Fee block by writing the invalidation flag to flash memory
 *
 * @return       MemIf_JobResultType
 * @retval       MEMIF_JOB_PENDING        Underlying MemAcc accepted the write job
@@ -4060,8 +4107,8 @@ static MemIf_JobResultType Fee_JobInvalidateBlock(void)
             /* Serialize invalidation pattern to buffer */
             Fee_SerializeFlag(Fee_aDataBuffer, FEE_INVALIDATED_VALUE);
 
-            /* Write invalidation pattern to memacc */
-            if (((Std_ReturnType)E_OK) == Fee_WriteToMemAcc(Fee_aBlockInfo[Fee_uJobBlockIndex].InvalidAddr, Fee_aDataBuffer, FEE_VIRTUAL_PAGE_SIZE))
+            /* Write invalidation pattern to flash memory */
+            if (((Std_ReturnType)E_OK) == Fee_CallMemAccWrite(Fee_aBlockInfo[Fee_uJobBlockIndex].InvalidAddr, Fee_aDataBuffer, FEE_VIRTUAL_PAGE_SIZE))
             {
                 /* MemAcc read job has been accepted */
                 RetVal = MEMIF_JOB_PENDING;
@@ -4228,8 +4275,8 @@ static boolean Fee_ReservedAreaWritable(void)
 {
     boolean RetVal;
     uint16 BlockSize;
-    uint16 AlignedBlockSize;
-    MemAcc_LengthType AvailClrSpace;
+    uint32 AlignedBlockSize;
+    uint32 AvailClrSpace;
     uint8 ClrGrpIndex;
     uint32 ReservedSpace;
     boolean ImmediateData;
@@ -4361,7 +4408,7 @@ static void Fee_JobErrorSchedule(void)
         {
             ClrGrpIndex = Fee_GetBlockClusterGrp(Fee_uJobBlockIndex);
 
-            /* Something wrong in memaccMemory (cluster swap occurs to next write) */
+            /* Something wrong in flash memory (cluster swap occurs to next write) */
             Fee_aClrGrpInfo[ClrGrpIndex].DataAddrIt = Fee_aClrGrpInfo[ClrGrpIndex].HdrAddrIt + (2U * FEE_BLOCK_OVERHEAD);
             MemAcc_JobResult = MemAcc_GetJobResult(FEE_MEMACC_ADDRESS_AREA_ID_USED);
             Fee_TranferJobResultMemAccToMemif(MemAcc_JobResult);
@@ -4401,12 +4448,12 @@ static void Fee_JobErrorSchedule(void)
 
 /**
 * @brief        Check if the bad subAddressArea appears in the recovery list or not
-* @return       MemAcc_LengthType
+* @return       uint32
 *
 */
-static MemAcc_LengthType Fee_GetRecoverSubAddressAreaSize(const Fee_SubAddressAreaRuntimeInfoType *BadSubAddressArea)
+static uint32 Fee_GetRecoverSubAddressAreaSize(const Fee_SubAddressAreaRuntimeInfoType *BadSubAddressArea)
 {
-    MemAcc_LengthType RecoverSize = 0U;
+    uint32 RecoverSize = 0U;
     uint32 SubAddressAreaIt;
 
     /* Check if it appears in the recovery list */
@@ -4431,7 +4478,7 @@ static MemAcc_LengthType Fee_GetRecoverSubAddressAreaSize(const Fee_SubAddressAr
 static void Fee_RecoverBadSubAddressAreas(Fee_ClusterRuntimeInfoType *Cluster)
 {
     uint32 SubAddressAreaIt;
-    MemAcc_LengthType SubAddressAreaSize;
+    uint32 SubAddressAreaSize;
 
     for (SubAddressAreaIt = 0U; SubAddressAreaIt < Cluster->SubAddressAreaCount; SubAddressAreaIt++)
     {
@@ -4494,11 +4541,11 @@ static MemIf_JobResultType Fee_TransJobSchedule(void)
 * @brief        Calculate the Offset over the cluster corresponding to the emulation address
 *
 */
-static MemAcc_LengthType Fee_CalcTransferOffset(MemAcc_AddressType emulationAddress)
+static uint32 Fee_CalcTransferOffset(uint32 emulationAddress)
 {
     uint32 GroupIt = 0U;
     uint32 ClusterIt = 0U;
-    MemAcc_LengthType Offset;
+    uint32 Offset;
 
     /* Find the cluster index that the emulation address belongs to */
     do
@@ -4532,11 +4579,11 @@ static MemAcc_LengthType Fee_CalcTransferOffset(MemAcc_AddressType emulationAddr
 * @brief        Calculate the maximum Length of transfer data from the next good subAddressArea
 *
 */
-static MemAcc_LengthType Fee_CalcMaxTransferLength(MemAcc_AddressType *LogicalAddress, MemAcc_LengthType OffsetAddress)
+static uint32 Fee_CalcMaxTransferLength(uint32 *LogicalAddress, uint32 OffsetAddress)
 {
-    MemAcc_LengthType TransferLength;
-    MemAcc_LengthType SubAddressAreaSize = Fee_pTransJobSubAddressArea->SubAddressAreaSize;
-    MemAcc_LengthType Offset = OffsetAddress;
+    uint32 TransferLength;
+    uint32 SubAddressAreaSize = Fee_pTransJobSubAddressArea->SubAddressAreaSize;
+    uint32 Offset = OffsetAddress;
 
     /* Find the next good subAddressArea that contains the Offset */
     while (Offset >= SubAddressAreaSize)
@@ -4546,7 +4593,7 @@ static MemAcc_LengthType Fee_CalcMaxTransferLength(MemAcc_AddressType *LogicalAd
         SubAddressAreaSize = Fee_pTransJobSubAddressArea->SubAddressAreaSize;
     }
 
-    /* Calculate the logical memacc address on this subAddressArea */
+    /* Calculate the logical subAddressArea address on this subAddressArea */
     *LogicalAddress = Fee_pTransJobSubAddressArea->SubAddressAreaAddr + Offset;
     /* Move to next subAddressArea */
     Fee_pTransJobSubAddressArea++;
@@ -4556,7 +4603,7 @@ static MemAcc_LengthType Fee_CalcMaxTransferLength(MemAcc_AddressType *LogicalAd
     {
         TransferLength = SubAddressAreaSize - Offset;
         /* Update information for the next translation job */
-        Fee_pTransJobBuffer += (MemAcc_AddressType)TransferLength;
+        Fee_pTransJobBuffer += (uint32)TransferLength;
     }
     else
     {
@@ -4570,14 +4617,14 @@ static MemAcc_LengthType Fee_CalcMaxTransferLength(MemAcc_AddressType *LogicalAd
 }
 
 /**
-* @brief        Performs the translation address to read the data from MemAcc
+* @brief        Performs the translation address to read the data from flash
 *
 */
-static Std_ReturnType Fee_TranslationJobRead(MemAcc_LengthType OffsetAddress)
+static Std_ReturnType Fee_TranslationJobRead(uint32 OffsetAddress)
 {
-    uint8 *pBuffer = (uint8 *)Fee_pTransJobBuffer;
-    MemAcc_AddressType LogicalAddress;
-    MemAcc_LengthType TransferLength;
+    uint8 *pBuffer = (uint8 *)(Fee_UintPtrType)Fee_pTransJobBuffer;
+    uint32 LogicalAddress;
+    uint32 TransferLength;
 
     /* Calculate maximum transfer Length */
     TransferLength = Fee_CalcMaxTransferLength(&LogicalAddress, OffsetAddress);
@@ -4586,14 +4633,14 @@ static Std_ReturnType Fee_TranslationJobRead(MemAcc_LengthType OffsetAddress)
 }
 
 /**
-* @brief        Performs the translation address to write the data to MemAcc
+* @brief        Performs the translation address to write the data to flash
 *
 */
-static Std_ReturnType Fee_TranslationJobWrite(MemAcc_LengthType OffsetAddress)
+static Std_ReturnType Fee_TranslationJobWrite(uint32 OffsetAddress)
 {
-    const uint8 *pBuffer = (const uint8 *)Fee_pTransJobBuffer;
-    MemAcc_AddressType LogicalAddress;
-    MemAcc_LengthType TransferLength;
+    const uint8 *pBuffer = (const uint8 *)(Fee_UintPtrType)Fee_pTransJobBuffer;
+    uint32 LogicalAddress;
+    uint32 TransferLength;
 
     /* Calculate maximum transfer Length */
     TransferLength = Fee_CalcMaxTransferLength(&LogicalAddress, OffsetAddress);
@@ -4668,23 +4715,24 @@ static Std_ReturnType Fee_TranslationJobEraseFailed(void)
 }
 #endif /* (FEE_SUBADDRESSAREA_RETIREMENT == STD_ON) */
 /**
-* @brief        Read data from MemAcc, translate the emulation to logical address in subAddressArea retirement mode
+* @brief        Read data from flash memory, translate the emulation to logical address in subAddressArea retirement mode
 *
 */
-static Std_ReturnType Fee_ReadFromMemAcc(MemAcc_AddressType SourceAddress,
+static Std_ReturnType Fee_CallMemAccRead(uint32 SourceAddress,
                                       const uint8 *TargetAddressPtr,
-                                      MemAcc_LengthType Length
+                                      uint32 Length
                                      )
 {
 #if (FEE_SUBADDRESSAREA_RETIREMENT == STD_ON)
-    MemAcc_LengthType Offset;
+    uint32 Offset;
 
     /* Find cluster & calculate the Offset address on it */
     Offset = Fee_CalcTransferOffset(SourceAddress);
 
     /* Prepare information for the next sub job */
     Fee_uTransJobLength = Length;
-    Fee_pTransJobBuffer = (MemAcc_AddressType)TargetAddressPtr;
+    /*To fix Cert-C violation*/
+    Fee_pTransJobBuffer = (Fee_UintPtrType)&TargetAddressPtr[0];
     Fee_eTransJob = FEE_TRANS_JOB_READ;
 
     return Fee_TranslationJobRead(Offset);
@@ -4694,24 +4742,24 @@ static Std_ReturnType Fee_ReadFromMemAcc(MemAcc_AddressType SourceAddress,
 }
 
 /**
-* @brief        Write data to MemAcc, translate the emulation to logical address in subAddressArea retirement mode
+* @brief        Write data to flash memory, translate the emulation to logical address in subAddressArea retirement mode
 *
 */
-static Std_ReturnType Fee_WriteToMemAcc(MemAcc_AddressType TargetAddress,
+static Std_ReturnType Fee_CallMemAccWrite(uint32 TargetAddress,
                                      const uint8 *SourceAddressPtr,
-                                     MemAcc_LengthType Length
+                                     uint32 Length
                                     )
 {
 
 #if (FEE_SUBADDRESSAREA_RETIREMENT == STD_ON)
-    MemAcc_LengthType Offset;
+    uint32 Offset;
 
     /* Find cluster & calculate the Offset address on it */
     Offset = Fee_CalcTransferOffset(TargetAddress);
 
     /* Prepare information for the next sub job */
     Fee_uTransJobLength = Length;
-    Fee_pTransJobBuffer = (MemAcc_AddressType)SourceAddressPtr;
+    Fee_pTransJobBuffer = (Fee_UintPtrType)&SourceAddressPtr[0];
     Fee_eTransJob = FEE_TRANS_JOB_WRITE;
 
     return Fee_TranslationJobWrite(Offset);
@@ -4726,7 +4774,7 @@ static Std_ReturnType Fee_WriteToMemAcc(MemAcc_AddressType TargetAddress,
 *
 */
 static Std_ReturnType Fee_EraseCluster(uint8 ClrGrpIt,
-                                       uint8 ClrIt
+                                       uint32 ClrIt
                                       )
 {
 #if (FEE_SUBADDRESSAREA_RETIREMENT == STD_ON)
@@ -4756,8 +4804,8 @@ static Std_ReturnType Fee_EraseCluster(uint8 ClrGrpIt,
     /* Erase the first good subAddressArea on the list */
     return MemAcc_Erase(FEE_MEMACC_ADDRESS_AREA_ID_USED, Fee_pTransJobSubAddressArea->SubAddressAreaAddr, Fee_pTransJobSubAddressArea->SubAddressAreaSize);
 #else
-    MemAcc_AddressType clusterAddress;
-    MemAcc_LengthType  ClusterLength;
+    uint32 clusterAddress;
+    uint32  ClusterLength;
 
     /* Get address and size of cluster in the cluster group */
     clusterAddress = Fee_ClrGrps[ClrGrpIt].ClrPtr[ClrIt].StartAddr;
@@ -4771,9 +4819,9 @@ static Std_ReturnType Fee_EraseCluster(uint8 ClrGrpIt,
 * @brief        Get the Length of the cluster by the group index and cluster index
 *
 */
-static inline MemAcc_LengthType Fee_GetClusterLength(uint8 ClrGrpIt,
-                                                  uint8 ClrIt
-                                                 )
+static inline uint32 Fee_GetClusterLength(uint8 ClrGrpIt,
+                                          uint32 ClrIt
+                                         )
 {
 #if (FEE_SUBADDRESSAREA_RETIREMENT == STD_ON)
     return Fee_aClrGrpInfo[ClrGrpIt].ClrInfo[ClrIt].Length;    /* Get from runtime data information */
@@ -4781,13 +4829,123 @@ static inline MemAcc_LengthType Fee_GetClusterLength(uint8 ClrGrpIt,
     return Fee_ClrGrps[ClrGrpIt].ClrPtr[ClrIt].Length;          /* Get from constant data configuration */
 #endif
 }
+
+/**
+* @brief        Handle internal job after a operation is canceled
+*
+*/
+static void Fee_HandleInternalJobAfterCancel(void)
+{
+
+    MemAcc_LengthType Processedlength = 0;
+    MemIf_JobResultType RetVal;
+    uint16 BlockSize;
+    uint32 AlignedBlockSize;
+    uint8 ClrGrp;
+#if (FEE_BLOCK_ALWAYS_AVAILABLE == STD_ON)
+    boolean IsReservedAreaTouched;
+#endif
+#if (FEE_BLOCK_ALWAYS_AVAILABLE == STD_OFF)
+    uint32 DataAddr;
+    uint32 HdrAddr;
+    uint8 ClrGrpIndex;
+#endif
+
+    /* get processed length of write vaild flag job of block */
+    Processedlength = MemAcc_GetProcessedLength(FEE_MEMACC_ADDRESS_AREA_ID_USED);
+
+    /* Write header operation has been canceled so update both header and data addresses */
+    if (FEE_JOB_WRITE_DATA == Fee_eJob)
+    {
+        /* Get size of Fee block */
+        BlockSize = Fee_BlockConfig[Fee_uJobBlockIndex].BlockSize;
+        /* Align Fee block size to the virtual page boundary */
+        AlignedBlockSize = Fee_AlignToVirtualPageSize(BlockSize);
+        /* get processed length of write header block job */
+#if (FEE_BLOCK_ALWAYS_AVAILABLE == STD_OFF)
+        if ((FEE_BLOCK_OVERHEAD - (2U * FEE_VIRTUAL_PAGE_SIZE)) == Processedlength)
+        {
+            /* Update blockinfo because header block already written successful */
+            /* No special treatment of immediate blocks needed anymore; dataAddr and invalidAddr
+            has to be updated for a newly written imm/non-imm block  */
+    
+            /* Index of cluster group the Fee block belongs to */
+            ClrGrpIndex = Fee_BlockConfig[Fee_uJobBlockIndex].ClrGrp;
+
+            /* Calculate data and header addresses */
+            DataAddr = Fee_aClrGrpInfo[ClrGrpIndex].DataAddrIt - AlignedBlockSize;
+            HdrAddr = Fee_aClrGrpInfo[ClrGrpIndex].HdrAddrIt;
+    
+            Fee_aBlockInfo[Fee_uJobBlockIndex].DataAddr = DataAddr;
+            Fee_aBlockInfo[Fee_uJobBlockIndex].InvalidAddr = (HdrAddr + FEE_BLOCK_OVERHEAD) - FEE_VIRTUAL_PAGE_SIZE;
+    
+            /* Mark the block as inconsistent since the block header has been written */
+            Fee_aBlockInfo[Fee_uJobBlockIndex].BlockStatus = FEE_BLOCK_INCONSISTENT;
+        }
+#endif  /* (FEE_BLOCK_ALWAYS_AVAILABLE == STD_OFF) */
+        /* Index of cluster group the Fee block belongs to */
+        ClrGrp = Fee_BlockConfig[Fee_uJobBlockIndex].ClrGrp;
+        /* Header has been written successfully or not so update both header and data addresse */
+        Fee_aClrGrpInfo[ClrGrp].HdrAddrIt += FEE_BLOCK_OVERHEAD;
+        Fee_aClrGrpInfo[ClrGrp].DataAddrIt -= AlignedBlockSize;
+        
+#if (FEE_BLOCK_ALWAYS_AVAILABLE == STD_ON)
+        /* When FEE_BLOCK_ALWAYS_AVAILABLE is enabled, Fee_BlockInfo is not updated immediatelly
+           upon a header write. In case of FEE Cancel, the information about the incosistent
+           (due to incomplete write) immediate block potentially residing in the Reserved Area
+           might be lost and therefore it need to be extra handled. */
+        IsReservedAreaTouched = Fee_ReservedAreaTargetedInClrGrp(ClrGrp);
+        if ((FALSE != Fee_BlockConfig[Fee_uJobBlockIndex].ImmediateData) && (FALSE != IsReservedAreaTouched))
+        {
+            /* Store the information about immediate blook touching the Reserved Area. */
+            Fee_TouchReservedAreaByBlock(Fee_uJobBlockIndex);
+        }
+#endif
+    }
+    /* Checking vaild flag of block have already written or not */
+    else if (FEE_JOB_WRITE_DONE == Fee_eJob)
+    {
+        if ((MemAcc_LengthType)FEE_VIRTUAL_PAGE_SIZE == Processedlength)
+        {
+            /* Canceling but valid flag wrote successfully, it mean write a block successful. so update blockinfo */
+            RetVal = Fee_JobWriteBlockDone();
+        }
+    }
+    /* Checking vaild flag of cluster in swap operation have already written or not */
+    else if (FEE_JOB_INT_SWAP_CLR_VLD_DONE == Fee_eJob)
+    {
+        if ((MemAcc_LengthType)FEE_VIRTUAL_PAGE_SIZE == Processedlength)
+        {
+            /* Canceling but valid flag wrote successfully so finalize cluster validation */
+            Fee_eJobIntOriginalJob = FEE_JOB_INI_SWAP_CANCELED;
+            RetVal = Fee_JobInternalSwapClusterVldDone();
+        }
+    }
+    /* Checking invalid flag have already written or not */
+    else if ((FEE_JOB_INVAL_BLOCK_DONE == Fee_eJob) && ((MemAcc_LengthType)FEE_VIRTUAL_PAGE_SIZE == Processedlength)) 
+    {
+        /* Canceling but invalid flag wrote successfully */
+        RetVal = Fee_JobInvalidateBlockDone();
+    }
+    else
+    {
+        /* nothing to do */
+    }
+
+    /* Update job cancel information */
+    Fee_eJobResult = MEMIF_JOB_CANCELED;
+    Fee_eJob = FEE_JOB_DONE;
+    Fee_eModuleStatus = MEMIF_IDLE;
+    /* variable RetVal not used */
+    (void)RetVal;
+}
 /*==================================================================================================
 *                                       GLOBAL FUNCTIONS
 ==================================================================================================*/
 
 /**
 * @brief        Service to initialize the FEE module.
-* @details      The function Fee_Init shall initialize the memacc EEPROM
+* @details      The function Fee_Init shall initialize the flash EEPROM
 *               Emulation module.
 *
 * @param[in]    ConfigPtr        Pointer to fee driver configuration set.
@@ -4809,7 +4967,7 @@ void Fee_Init(const Fee_ConfigType *ConfigPtr)
 #if (FEE_DEV_ERROR_DETECT == STD_ON)
     if (NULL_PTR != ConfigPtr)
     {
-        (void)Det_ReportError((uint16)FEE_MODULE_ID, FEE_INSTANCE_ID,FEE_INIT_ID, FEE_E_INIT_FAILED);
+        (void)Det_ReportError((uint16)FEE_MODULE_ID, FEE_INSTANCE_ID,FEE_INIT_ID, FEE_E_PARAM_POINTER);
     }
     else if (MEMIF_BUSY == Fee_eModuleStatus)
     {
@@ -4873,7 +5031,7 @@ void Fee_Init(const Fee_ConfigType *ConfigPtr)
 *               Offset and calculate the corresponding memory read address.
 *
 * @param[in]    BlockNumber     Number of logical block, also denoting
-*                                start address of that block in memacc memory.
+*                                start address of that block in flash memory.
 * @param[in]    BlockOffset     Read address Offset inside the block.
 * @param[out]   DataBufferPtr   Pointer to data buffer.
 * @param[in]    Length          Number of bytes to read.
@@ -4900,10 +5058,7 @@ void Fee_Init(const Fee_ConfigType *ConfigPtr)
 */
 Std_ReturnType Fee_Read(uint16 BlockNumber, uint16 BlockOffset, uint8 *DataBufferPtr, uint16 Length)
 {
-    Std_ReturnType RetVal = (Std_ReturnType)E_NOT_OK;
-#if (FEE_DEV_ERROR_DETECT == STD_ON)
-    boolean bCheck = FALSE;
-#endif    /* FEE_DEV_ERROR_DETECT == STD_ON */
+    Std_ReturnType RetVal = (Std_ReturnType)E_OK;
     uint16 BlockIndex = Fee_GetBlockIndex(BlockNumber);
 
     /* Start of exclusive area. Implementation depends on integrator. */
@@ -4914,40 +5069,42 @@ Std_ReturnType Fee_Read(uint16 BlockNumber, uint16 BlockOffset, uint8 *DataBuffe
 #if (FEE_DEV_ERROR_DETECT == STD_ON)
         (void)Det_ReportError((uint16)FEE_MODULE_ID, FEE_INSTANCE_ID, FEE_READ_ID, FEE_E_UNINIT);
 #endif /* FEE_DEV_ERROR_DETECT == STD_ON */
+        RetVal = (Std_ReturnType)E_NOT_OK;
     }
     else if (MEMIF_BUSY == Fee_eModuleStatus)
     {
         (void)Det_ReportRuntimeError((uint16)FEE_MODULE_ID, FEE_INSTANCE_ID, FEE_READ_ID, FEE_E_BUSY);
+        RetVal = (Std_ReturnType)E_NOT_OK;
     }
-
+    else
+    {
 #if (FEE_DEV_ERROR_DETECT == STD_ON)
-    else if (0xFFFFU == BlockIndex)
-    {
-        (void)Det_ReportError((uint16)FEE_MODULE_ID, FEE_INSTANCE_ID, FEE_READ_ID, FEE_E_INVALID_BLOCK_NO);
-    }
-    else if (BlockOffset >= Fee_BlockConfig[BlockIndex].BlockSize)
-    {
-        (void)Det_ReportError((uint16)FEE_MODULE_ID, FEE_INSTANCE_ID, FEE_READ_ID, FEE_E_INVALID_BLOCK_OFS);
-    }
-    else
-    {
-        bCheck = TRUE;
-    }
-
-    if (bCheck == FALSE)
-    {
-        /*Do nothing, break if-else here to reduce HIS LEVEL index*/
-    }
-    else if ((0U == Length) || ((BlockOffset + Length) > Fee_BlockConfig[BlockIndex].BlockSize) || (0U != (Length % FEE_MINIMUM_READ_PAGE_SIZE)))
-    {
-        (void)Det_ReportError((uint16)FEE_MODULE_ID, FEE_INSTANCE_ID, FEE_READ_ID, FEE_E_INVALID_BLOCK_LEN);
-    }
-    else if (NULL_PTR == DataBufferPtr)
-    {
-        (void)Det_ReportError((uint16)FEE_MODULE_ID, FEE_INSTANCE_ID, FEE_READ_ID, FEE_E_PARAM_POINTER);
-    }
+        if (0xFFFFU == BlockIndex)
+        {
+            (void)Det_ReportError((uint16)FEE_MODULE_ID, FEE_INSTANCE_ID, FEE_READ_ID, FEE_E_INVALID_BLOCK_NO);
+            RetVal = (Std_ReturnType)E_NOT_OK;
+        }
+        else
+        {
+            if (BlockOffset >= Fee_BlockConfig[BlockIndex].BlockSize)
+            {
+                (void)Det_ReportError((uint16)FEE_MODULE_ID, FEE_INSTANCE_ID, FEE_READ_ID, FEE_E_INVALID_BLOCK_OFS);
+                RetVal = (Std_ReturnType)E_NOT_OK;
+            }
+            if ((0U == Length) || ((BlockOffset + Length) > Fee_BlockConfig[BlockIndex].BlockSize) || (0U != (Length % FEE_MINIMUM_READ_PAGE_SIZE)))
+            {
+                (void)Det_ReportError((uint16)FEE_MODULE_ID, FEE_INSTANCE_ID, FEE_READ_ID, FEE_E_INVALID_BLOCK_LEN);
+                RetVal = (Std_ReturnType)E_NOT_OK;
+            }
+        }
+        if (NULL_PTR == DataBufferPtr)
+        {
+            (void)Det_ReportError((uint16)FEE_MODULE_ID, FEE_INSTANCE_ID, FEE_READ_ID, FEE_E_PARAM_POINTER);
+            RetVal = (Std_ReturnType)E_NOT_OK;
+        }
 #endif    /* FEE_DEV_ERROR_DETECT == STD_ON */
-    else
+    }
+    if ((Std_ReturnType)E_OK == RetVal)
     {
         /* Configure the read job */
         Fee_uJobBlockIndex = BlockIndex;
@@ -4964,8 +5121,6 @@ Std_ReturnType Fee_Read(uint16 BlockNumber, uint16 BlockOffset, uint8 *DataBuffe
 
         /* Execute the read job */
         Fee_eJobResult = MEMIF_JOB_PENDING;
-
-        RetVal = (Std_ReturnType)E_OK;
     }
     /* End of exclusive area. Implementation depends on integrator. */
     SchM_Exit_Fee_FEE_EXCLUSIVE_AREA_00();
@@ -5032,19 +5187,22 @@ Std_ReturnType Fee_Write(uint16 BlockNumber, const uint8 *DataBufferPtr)
         (void)Det_ReportRuntimeError((uint16)FEE_MODULE_ID, FEE_INSTANCE_ID, FEE_WRITE_ID, FEE_E_BUSY);
         RetVal = (Std_ReturnType)E_NOT_OK;
     }
-#if (FEE_DEV_ERROR_DETECT == STD_ON)
-    else if (0xFFFFU == BlockIndex)
-    {
-        (void)Det_ReportError((uint16)FEE_MODULE_ID, FEE_INSTANCE_ID, FEE_WRITE_ID, FEE_E_INVALID_BLOCK_NO);
-        RetVal = (Std_ReturnType)E_NOT_OK;
-    }
-    else if ((NULL_PTR == DataBufferPtr) || (0U != ((Fee_UintPtrType)DataBufferPtr % FEE_BUFFER_ALIGN_VALUE)))
-    {
-        (void)Det_ReportError((uint16)FEE_MODULE_ID, FEE_INSTANCE_ID,FEE_WRITE_ID, FEE_E_PARAM_POINTER);
-        RetVal = (Std_ReturnType)E_NOT_OK;
-    }
-#endif    /* FEE_DEV_ERROR_DETECT == STD_ON */
     else
+    {
+#if (FEE_DEV_ERROR_DETECT == STD_ON)
+        if (0xFFFFU == BlockIndex)
+        {
+            (void)Det_ReportError((uint16)FEE_MODULE_ID, FEE_INSTANCE_ID, FEE_WRITE_ID, FEE_E_INVALID_BLOCK_NO);
+            RetVal = (Std_ReturnType)E_NOT_OK;
+        }
+        if ((NULL_PTR == DataBufferPtr) || (0U != ((Fee_UintPtrType)(&DataBufferPtr[0]) % FEE_BUFFER_ALIGN_VALUE)))
+        {
+            (void)Det_ReportError((uint16)FEE_MODULE_ID, FEE_INSTANCE_ID,FEE_WRITE_ID, FEE_E_PARAM_POINTER);
+            RetVal = (Std_ReturnType)E_NOT_OK;
+        }
+#endif    /* FEE_DEV_ERROR_DETECT == STD_ON */
+    }
+    if ((Std_ReturnType)E_OK == RetVal)
     {
         /* Configure the write job */
         Fee_uJobBlockIndex = BlockIndex;
@@ -5069,7 +5227,7 @@ Std_ReturnType Fee_Write(uint16 BlockNumber, const uint8 *DataBufferPtr)
 *               driver.
 * @details      The function Fee_Cancel and the cancel function of the
 *               underlying MemAcc driver are asynchronous w.r.t. an ongoing
-*               read, erase or write job in the memacc memory.
+*               read, erase or write job in the flash memory.
 *
 * @pre          The module must be initialized.
 * @post         Changes Fee_eModuleStatus module status and job result
@@ -5098,12 +5256,19 @@ void Fee_Cancel(void)
             /* Cancel ongoing MemAcc job if any */
             if (MEMIF_BUSY == Fee_eModuleStatus)
             {
-                Fee_eJobResult = MEMIF_JOB_CANCELED;
-                Fee_eJob = FEE_JOB_DONE;
-                MemAcc_Cancel(FEE_MEMACC_ADDRESS_AREA_ID_USED);
-                Fee_eModuleStatus = MEMIF_IDLE;
-
-                /* No notifications from internal jobs */
+                /* job have already requested to MemAcc driver */
+                if(MEMACC_JOB_PENDING == MemAcc_GetJobStatus(FEE_MEMACC_ADDRESS_AREA_ID_USED))
+                {
+                    /* Call Memacc_cancel() to cancel */
+                    MemAcc_Cancel(FEE_MEMACC_ADDRESS_AREA_ID_USED);
+                }
+                else
+                {
+                    /* The job has not actually been requested to the memacc yet so just reset the status variables */
+                    Fee_eJobResult = MEMIF_JOB_CANCELED;
+                    Fee_eJob = FEE_JOB_DONE;
+                    Fee_eModuleStatus = MEMIF_IDLE;
+                }
             }
             else
             {
@@ -5187,7 +5352,7 @@ MemIf_JobResultType Fee_GetJobResult(void)
 * @brief        Service to invalidate a logical block.
 *
 * @param[in]    BlockNumber     Number of logical block, also denoting
-*                                start address of that block in memacc memory
+*                                start address of that block in flash memory
 * @return       Std_ReturnType
 * @retval       E_OK             The job was accepted by the underlying
 *                                memory driver.
@@ -5210,7 +5375,7 @@ MemIf_JobResultType Fee_GetJobResult(void)
 */
 Std_ReturnType Fee_InvalidateBlock(uint16 BlockNumber)
 {
-    Std_ReturnType RetVal = (Std_ReturnType)E_NOT_OK;
+    Std_ReturnType RetVal = (Std_ReturnType)E_OK;
     uint16 BlockIndex = Fee_GetBlockIndex(BlockNumber);
 
     /* Start of exclusive area. Implementation depends on integrator. */
@@ -5220,36 +5385,39 @@ Std_ReturnType Fee_InvalidateBlock(uint16 BlockNumber)
     if (MEMIF_UNINIT == Fee_eModuleStatus)
     {
         (void)Det_ReportError((uint16)FEE_MODULE_ID, FEE_INSTANCE_ID, FEE_INVALIDATEBLOCK_ID, FEE_E_UNINIT);
+        RetVal = (Std_ReturnType)E_NOT_OK;
     }
-    else if (0xFFFFU == BlockIndex)
-    {
-        (void)Det_ReportError((uint16)FEE_MODULE_ID, FEE_INSTANCE_ID, FEE_INVALIDATEBLOCK_ID, FEE_E_INVALID_BLOCK_NO);
-    }
-    else if (MEMIF_BUSY == Fee_eModuleStatus)
-    {
-        (void)Det_ReportRuntimeError((uint16)FEE_MODULE_ID, FEE_INSTANCE_ID, FEE_INVALIDATEBLOCK_ID, FEE_E_BUSY);
-    }
-    else
-#else
+#endif /* FEE_DEV_ERROR_DETECT == STD_ON */
     if (MEMIF_BUSY == Fee_eModuleStatus)
     {
         (void)Det_ReportRuntimeError((uint16)FEE_MODULE_ID, FEE_INSTANCE_ID, FEE_INVALIDATEBLOCK_ID, FEE_E_BUSY);
+        RetVal = (Std_ReturnType)E_NOT_OK;
     }
-        if (MEMIF_IDLE == Fee_eModuleStatus)
-#endif    /* FEE_DEV_ERROR_DETECT == STD_ON */
+#if (FEE_DEV_ERROR_DETECT == STD_ON)
+    else
+    {
+        if (0xFFFFU == BlockIndex)
         {
-            /* Configure the invalidate block job */
-            Fee_uJobBlockIndex = BlockIndex;
-
-            Fee_eJob = FEE_JOB_INVAL_BLOCK;
-
-            Fee_eModuleStatus = MEMIF_BUSY;
-
-            /* Execute the invalidate block job */
-            Fee_eJobResult = MEMIF_JOB_PENDING;
-
-            RetVal = (Std_ReturnType)E_OK;
+            (void)Det_ReportError((uint16)FEE_MODULE_ID, FEE_INSTANCE_ID, FEE_INVALIDATEBLOCK_ID, FEE_E_INVALID_BLOCK_NO);
+            RetVal = (Std_ReturnType)E_NOT_OK;
         }
+    }
+#endif    /* FEE_DEV_ERROR_DETECT == STD_ON */
+
+    if ((Std_ReturnType)E_OK == RetVal)
+    {
+        /* Configure the invalidate block job */
+        Fee_uJobBlockIndex = BlockIndex;
+
+        Fee_eJob = FEE_JOB_INVAL_BLOCK;
+
+        Fee_eModuleStatus = MEMIF_BUSY;
+
+        /* Execute the invalidate block job */
+        Fee_eJobResult = MEMIF_JOB_PENDING;
+
+        RetVal = (Std_ReturnType)E_OK;
+    }
     /* End of exclusive area. Implementation depends on integrator. */
     SchM_Exit_Fee_FEE_EXCLUSIVE_AREA_02();
 
@@ -5335,7 +5503,7 @@ void Fee_GetVersionInfo(Std_VersionInfoType *VersionInfoPtr)
 */
 Std_ReturnType Fee_EraseImmediateBlock(uint16 BlockNumber)
 {
-    Std_ReturnType RetVal;
+    Std_ReturnType RetVal = (Std_ReturnType)E_OK;
     uint16 BlockIndex = Fee_GetBlockIndex(BlockNumber);
 
     /* Start of exclusive area. Implementation depends on integrator. */
@@ -5347,25 +5515,32 @@ Std_ReturnType Fee_EraseImmediateBlock(uint16 BlockNumber)
         (void)Det_ReportError((uint16)FEE_MODULE_ID, FEE_INSTANCE_ID, FEE_ERASEIMMEDIATEBLOCK_ID, FEE_E_UNINIT);
         RetVal = (Std_ReturnType)E_NOT_OK;
     }
-    else if (0xFFFFU == BlockIndex)
-    {
-        (void)Det_ReportError((uint16)FEE_MODULE_ID, FEE_INSTANCE_ID, FEE_ERASEIMMEDIATEBLOCK_ID, FEE_E_INVALID_BLOCK_NO);
-        RetVal = (Std_ReturnType)E_NOT_OK;
-    }
-    else if (FALSE == Fee_BlockConfig[BlockIndex].ImmediateData)
-    {
-        (void)Det_ReportError((uint16)FEE_MODULE_ID, FEE_INSTANCE_ID, FEE_ERASEIMMEDIATEBLOCK_ID, FEE_E_INVALID_BLOCK_NO);
-        RetVal = (Std_ReturnType)E_NOT_OK;
-    }
-    else if (MEMIF_BUSY == Fee_eModuleStatus)
+#endif /* FEE_DEV_ERROR_DETECT == STD_ON */
+    if (MEMIF_BUSY == Fee_eModuleStatus)
     {
         (void)Det_ReportRuntimeError((uint16)FEE_MODULE_ID, FEE_INSTANCE_ID, FEE_ERASEIMMEDIATEBLOCK_ID, FEE_E_BUSY);
         RetVal = (Std_ReturnType)E_NOT_OK;
     }
-    else
+#if (FEE_DEV_ERROR_DETECT == STD_ON)
+    else 
     {
+        if (0xFFFFU == BlockIndex)
+        {
+            (void)Det_ReportError((uint16)FEE_MODULE_ID, FEE_INSTANCE_ID, FEE_ERASEIMMEDIATEBLOCK_ID, FEE_E_INVALID_BLOCK_NO);
+            RetVal = (Std_ReturnType)E_NOT_OK;
+        }
+        else
+        {
+            if (FALSE == Fee_BlockConfig[BlockIndex].ImmediateData)
+            {
+                (void)Det_ReportError((uint16)FEE_MODULE_ID, FEE_INSTANCE_ID, FEE_ERASEIMMEDIATEBLOCK_ID, FEE_E_INVALID_BLOCK_NO);
+                RetVal = (Std_ReturnType)E_NOT_OK;
+            }
+        }
+    }
 #endif /* FEE_DEV_ERROR_DETECT == STD_ON */
-
+    if ((Std_ReturnType)E_OK == RetVal)
+    {
         /* Configure the erase immediate block job */
         Fee_uJobBlockIndex = BlockIndex;
         Fee_eJob = FEE_JOB_ERASE_IMMEDIATE;
@@ -5373,11 +5548,7 @@ Std_ReturnType Fee_EraseImmediateBlock(uint16 BlockNumber)
 
         /* Execute the erase immediate block job */
         Fee_eJobResult = MEMIF_JOB_PENDING;
-
-        RetVal = (Std_ReturnType)E_OK;
-#if (FEE_DEV_ERROR_DETECT == STD_ON)
     }
-#endif /* FEE_DEV_ERROR_DETECT == STD_ON */
 
     /* End of exclusive area. Implementation depends on integrator. */
     SchM_Exit_Fee_FEE_EXCLUSIVE_AREA_03();
@@ -5388,16 +5559,18 @@ Std_ReturnType Fee_EraseImmediateBlock(uint16 BlockNumber)
 /**
 * @brief      To report the error end of an asynchronous operation.
 */
-static void Fee_DoJobErrorNotification(void)
+static void Fee_DoJobErrorNotification(MemAcc_JobResultType JobResult)
 {
 #if (FEE_SUBADDRESSAREA_RETIREMENT == STD_ON)
     Std_ReturnType TransStatus;
 #endif
 
-    if (MEMIF_JOB_CANCELED == Fee_eJobResult)
+    if (MEMACC_MEM_CANCELED == JobResult)
     {
-        /* MemAcc job has been canceled. Do nothing in this callback.
-        The NvM_JobErrorNotification() callback will be called from the Fee_Cancel()function which called the MemAcc_Cancel() function */
+        /* Update runtime infor after cancel */
+        Fee_HandleInternalJobAfterCancel();
+        /* Call job error notification function */
+        FEE_NVM_JOB_ERROR_NOTIFICATION
     }   
     else
     {
@@ -5418,6 +5591,38 @@ static void Fee_DoJobErrorNotification(void)
         {
             /* Schedule the error job */
             Fee_JobErrorSchedule();
+        }
+    }
+}
+
+static void Fee_ContinueHandleInternalJob(void)
+{
+    if (FEE_JOB_DONE == Fee_eJob)
+    {
+        /* Last schedule MemAcc job finished */
+        Fee_eJobResult = MEMIF_JOB_OK;
+        Fee_eModuleStatus = MEMIF_IDLE;
+        /* Call job end notification function */
+        FEE_NVM_JOB_END_NOTIFICATION
+    }
+    else
+    {
+        Fee_eJobResult = Fee_JobSchedule();
+        if (MEMIF_JOB_OK == Fee_eJobResult)
+        {
+            Fee_eModuleStatus = MEMIF_IDLE;
+            /* Call job end notification function */
+            FEE_NVM_JOB_END_NOTIFICATION
+        }
+        else if (MEMIF_JOB_PENDING == Fee_eJobResult)
+        {
+            /* Nothing to do (ongoing MemAcc job) */
+        }
+        else
+        {
+            Fee_eModuleStatus = MEMIF_IDLE;
+            /* Call job error notification function */
+            FEE_NVM_JOB_ERROR_NOTIFICATION
         }
     }
 }
@@ -5463,42 +5668,12 @@ void Fee_JobEndNotification(MemAcc_AddressAreaIdType    AddressAreaId,
             else
 #endif
             {
-                if (FEE_JOB_DONE == Fee_eJob)
-                {
-                    /* Last schedule MemAcc job finished */
-                    Fee_eJobResult = MEMIF_JOB_OK;
-                    Fee_eModuleStatus = MEMIF_IDLE;
-    
-                    /* Call job end notification function */
-                    FEE_NVM_JOB_END_NOTIFICATION
-                }
-                else
-                {
-                    Fee_eJobResult = Fee_JobSchedule();
-                    if (MEMIF_JOB_OK == Fee_eJobResult)
-                    {
-                        Fee_eModuleStatus = MEMIF_IDLE;
-    
-                        /* Call job end notification function */
-                        FEE_NVM_JOB_END_NOTIFICATION
-                    }
-                    else if (MEMIF_JOB_PENDING == Fee_eJobResult)
-                    {
-                        /* Nothing to do (ongoing MemAcc job) */
-                    }
-                    else
-                    {
-                        Fee_eModuleStatus = MEMIF_IDLE;
-    
-                        /* Call job error notification function */
-                        FEE_NVM_JOB_ERROR_NOTIFICATION
-                    }
-                }
+                Fee_ContinueHandleInternalJob();
             }
         }
         else
         {
-            Fee_DoJobErrorNotification();
+            Fee_DoJobErrorNotification(JobResult);
         }
     }
     /* to avoid error compiler warning */
@@ -5637,7 +5812,7 @@ static void Fee_GetSubAddressAreaRunTimeInfo(uint8 ClrGrpIndex,
 */
 void Fee_GetRunTimeInfo(uint8 ClrGrpIndex, Fee_ClusterGroupRuntimeInfoType *ClrGrpRTInfo)
 {
-    uint8 ActiveClrIndex;
+    uint32 ActiveClrIndex;
 
     /* DET Check for cluster group should be added:
         - INITIALIZED driver
@@ -5763,4 +5938,3 @@ Std_ReturnType Fee_ForceSwapOnNextWrite(uint8 ClrGrpIndex)
 #endif
 
 /** @}*/
-

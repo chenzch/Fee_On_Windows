@@ -26,6 +26,8 @@ extern "C" {
 #include <SchM_MemAcc.h>
 #include <SchM_Fee.h>
 #include "Fee.h"
+#include "Mem_43_INFLS.h"
+#include <stdio.h>
 /*==================================================================================================
 *                          LOCAL TYPEDEFS (STRUCTURES, UNIONS, ENUMS)
 ==================================================================================================*/
@@ -48,12 +50,12 @@ extern "C" {
 /*==================================================================================================
 *                                      GLOBAL CONSTANTS
 ==================================================================================================*/
-const uint8 DataBlock0[4] = {0x00,0x01,0x02,0x03};
+uint8 DataBlock0[32];
 
 /*==================================================================================================
 *                                      GLOBAL VARIABLES
 ==================================================================================================*/
-uint8 DataReceive[2] = {0x0,0x0};
+uint8 DataReceive[32];
 
 /*==================================================================================================
 *                                   LOCAL FUNCTION PROTOTYPES
@@ -75,10 +77,41 @@ void Fee_ExampleAssert(boolean Condition)
         /* Loop forever */
     }
 }
+
+static void Fee_Wait(void) {
+    MemIf_StatusType status;
+    do
+    {
+        Fee_MainFunction();
+        MemAcc_MainFunction();
+        status = Fee_GetStatus();
+    } while (status != MEMIF_IDLE);
+}
+
+static void Test_FillData(uint8_t Pattern) {
+    uint32_t index;
+    for (index = 0; index < 16; ++index) {
+		DataBlock0[index] = Pattern << 4 | index;
+        DataBlock0[31 - index] = Pattern << 4 | index;
+    }
+}
+
+static void Test_DumpData(void) {
+    uint32_t index;
+    for (index = 0; index < 32; ++index) {
+		printf("%02X ", DataReceive[index]);
+        if (index == 15) {
+            printf("\n");
+		}
+	}
+    printf("\n");
+}
+
 /*==================================================================================================
 *                                       GLOBAL FUNCTIONS
 ==================================================================================================*/
 extern void X86_Unload(void);
+extern const MemAcc_ConfigType MemAcc_Config;
 /**
 * @brief        Main function of the example
 * @details      Initializez the used drivers and uses the Gpt
@@ -89,42 +122,42 @@ int main(void)
     MemIf_StatusType status = MEMIF_IDLE;
     Std_ReturnType RetValue = E_NOT_OK;
 
+    Mem_43_INFLS_Init(NULL_PTR);
+
     /* Init MemAcc */
-    MemAcc_Init(NULL_PTR);
+    MemAcc_Init(&MemAcc_Config);
 
     /* Init Fee */
     Fee_Init(NULL_PTR);
-    do
-    {
-        Fee_MainFunction();
-        MemAcc_MainFunction();
-        status = Fee_GetStatus();
-    } while (status != MEMIF_IDLE);
-    /* Init fee success */
-    Fee_ExampleAssert(MEMIF_JOB_OK == Fee_GetJobResult());
+    Fee_Wait();
 
+    Test_FillData(0);
     Fee_Write(FeeConf_FeeBlockConfiguration_FeeBlockConfiguration_0, DataBlock0);
-    Fee_MainFunction();
-    MemAcc_MainFunction();
-    Fee_MainFunction();
-    MemAcc_MainFunction();
+    Fee_Wait();
+    Fee_Read(FeeConf_FeeBlockConfiguration_FeeBlockConfiguration_0, 0, DataReceive, 32);
+    Fee_Wait();
+    Test_DumpData();
 
-    Fee_Cancel();
-    do
-    {
-        Fee_MainFunction();
-        MemAcc_MainFunction();
-        status = MemAcc_GetJobResult(FEE_MEMACC_ADDRESS_AREA_ID_USED);
-    } while (status != MEMACC_MEM_CANCELED);
+    Test_FillData(1);
+    Fee_Write(FeeConf_FeeBlockConfiguration_FeeBlockConfiguration_1, DataBlock0);
+    Fee_Wait();
+    Fee_Read(FeeConf_FeeBlockConfiguration_FeeBlockConfiguration_1, 0, DataReceive, 32);
+    Fee_Wait();
+    Test_DumpData();
+
+    Test_FillData(2);
     Fee_Write(FeeConf_FeeBlockConfiguration_FeeBlockConfiguration_0, DataBlock0);
-    do
-    {
-        Fee_MainFunction();
-        MemAcc_MainFunction();
-        status = Fee_GetStatus();
-    } while (status != MEMIF_IDLE);
+    Fee_Wait();
+    Fee_Read(FeeConf_FeeBlockConfiguration_FeeBlockConfiguration_0, 0, DataReceive, 32);
+    Fee_Wait();
+    Test_DumpData();
 
-
+    Test_FillData(3);
+    Fee_Write(FeeConf_FeeBlockConfiguration_FeeBlockConfiguration_1, DataBlock0);
+    Fee_Wait();
+    Fee_Read(FeeConf_FeeBlockConfiguration_FeeBlockConfiguration_1, 0, DataReceive, 32);
+    Fee_Wait();
+    Test_DumpData();
 
     ///*Write data to block 0*/
     //RetValue = Fee_Write(FeeConf_FeeBlockConfiguration_FeeBlockConfiguration_0, DataBlock0);
@@ -171,3 +204,74 @@ int main(void)
 #endif
 
 /** @} */
+#if 0
+void Memory_Init(void) {
+    // Mem_43_INFLS_Init(NULL_PTR);
+//    MemAcc_Init(&MemAcc_Config);
+//    Fee_Init(NULL_PTR);
+}
+
+bool Memory_MainFunction(void) {
+    //    Fee_MainFunction();
+    //    MemAcc_MainFunction();
+        // Mem_43_INFLS_MainFunction();
+    //    return MEMIF_IDLE != Fee_GetStatus();
+    return false;
+}
+
+bool Memory_Success(void) {
+    //    return MEMIF_JOB_OK == Fee_GetJobResult();
+    return true;
+}
+
+static bool BlockRead(uint32_t BlockID, uint32_t Offset, uint8_t* pData, size_t Length) {
+    if ((BlockID < BLOCKCOUNT) && (E_OK == Fee_Read((uint16)BlockID, (uint16)Offset, pData, (uint16)Length))) {
+        while (Memory_MainFunction())
+            ;
+        return Memory_Success();
+    }
+    else {
+        return false;
+    }
+}
+
+static bool BlockWrite(uint32_t BlockID, uint32_t Offset, uint8_t* pData, size_t Length) {
+    if ((BlockID >= BLOCKCOUNT) || ((Offset + Length) > BLOCKSIZE)) {
+        return false;
+    }
+
+    uint8_t tempBlock[BLOCKSIZE];
+
+    // A partial write requires reading the block first.
+    if ((Offset > 0) || (Length < BLOCKSIZE)) {
+        if (E_OK != Fee_Read((uint16)BlockID, 0, tempBlock, BLOCKSIZE)) {
+            return false; // Could not start job
+        }
+        while (Memory_MainFunction())
+            ;
+        if (!Memory_Success()) {
+            return false;
+        }
+    }
+
+    // Modify data in buffer
+    for (size_t i = 0; i < Length; i++) {
+        tempBlock[Offset + i] = pData[i];
+    }
+
+    // Write entire block
+    if (E_OK == Fee_Write((uint16)BlockID, tempBlock)) {
+        while (Memory_MainFunction())
+            ;
+        return Memory_Success();
+    }
+    else {
+        return false;
+    }
+}
+Memory_Init();
+while (Memory_MainFunction()) {
+    /* Wait for memory initialization to complete */
+}
+
+#endif

@@ -8,12 +8,12 @@
 *   Autosar Version      : 4.7.0
 *   Autosar Revision     : ASR_REL_4_7_REV_0000
 *   Autosar Conf.Variant :
-*   SW Version           : 4.0.0
-*   Build Version        : S32K3_RTD_4_0_0_HF02_D2407_ASR_REL_4_7_REV_0000_20240725
+*   SW Version           : 6.0.0
+*   Build Version        : S32K3_RTD_6_0_0_D2506_ASR_REL_4_7_REV_0000_20250610
 *
-*   Copyright 2020 - 2024 NXP
+*   Copyright 2020 - 2025 NXP
 *
-*   NXP Confidential. This software is owned or controlled by NXP and may only be
+*   NXP Confidential and Proprietary. This software is owned or controlled by NXP and may only be
 *   used strictly in accordance with the applicable license terms. By expressly
 *   accepting such terms or by downloading, installing, activating and/or otherwise
 *   using the software, you are agreeing that you have read, and that you agree to
@@ -45,7 +45,6 @@ extern "C"{
 #include "Mem_43_INFLS.h"
 #include "SchM_Mem_43_INFLS.h"
 
-
 /*==================================================================================================
 *                                 SOURCE FILE VERSION INFORMATION
 ==================================================================================================*/
@@ -53,7 +52,7 @@ extern "C"{
 #define MEMACC_PBCFG_AR_RELEASE_MAJOR_VERSION_C       4
 #define MEMACC_PBCFG_AR_RELEASE_MINOR_VERSION_C       7
 #define MEMACC_PBCFG_AR_RELEASE_REVISION_VERSION_C    0
-#define MEMACC_PBCFG_SW_MAJOR_VERSION_C               4
+#define MEMACC_PBCFG_SW_MAJOR_VERSION_C               6
 #define MEMACC_PBCFG_SW_MINOR_VERSION_C               0
 #define MEMACC_PBCFG_SW_PATCH_VERSION_C               0
 
@@ -106,15 +105,13 @@ extern "C"{
 #define MEMACC_START_SEC_CODE
 #include "MemAcc_MemMap.h"
 
-extern void Fee_JobEndNotification(MemAcc_AddressAreaIdType AddressAreaId, MemAcc_JobResultType JobResult); 
-
 #define MEMACC_STOP_SEC_CODE
 #include "MemAcc_MemMap.h"
 
 #define MEMACC_START_SEC_VAR_CLEARED_UNSPECIFIED
 #include "MemAcc_MemMap.h"
 
-/* Information of the current processing job of each adddress area */
+/* Information of the current processing job of each address area */
 static MemAcc_JobRuntimeInfoType MemAcc_JobRuntimeInfo[1];           
 
 #define MEMACC_STOP_SEC_VAR_CLEARED_UNSPECIFIED
@@ -151,18 +148,18 @@ static MemAcc_MemApiType MemAcc_MemApis[1] =
         0xFFFFFFFFU,                                                 /* Flags */
         0xFFFFFFFFU,                                                 /* Header */
         0xFFFFFFFFU,                                                 /* Delimiter */
-        (MemAcc_MemInitFuncType)Mem_43_INFLS_Init,                   /* InitFunc */
-        (MemAcc_MemDeInitFuncType)Mem_43_INFLS_DeInit,               /* DeInitFunc */
-        (MemAcc_MemMainFuncType)Mem_43_INFLS_MainFunction,           /* MainFunc */
-        (MemAcc_MemGetJobResultFuncType)Mem_43_INFLS_GetJobResult,   /* GetJobResultFunc */
-        (MemAcc_MemReadFuncType)Mem_43_INFLS_Read,                   /* ReadFunc */
-        (MemAcc_MemWriteFuncType)Mem_43_INFLS_Write,                 /* WriteFunc */
-        (MemAcc_MemEraseFuncType)Mem_43_INFLS_Erase,                 /* EraseFunc */
-        (MemAcc_MemBlankCheckFuncType)Mem_43_INFLS_BlankCheck,       /* BlankCheckFunc */
+        (MemAcc_MemInitFuncType)&Mem_43_INFLS_Init,                  /* InitFunc */
+        (MemAcc_MemDeInitFuncType)&Mem_43_INFLS_DeInit,              /* DeInitFunc */
+        (MemAcc_MemMainFuncType)&Mem_43_INFLS_MainFunction,          /* MainFunc */
+        (MemAcc_MemGetJobResultFuncType)&Mem_43_INFLS_GetJobResult,  /* GetJobResultFunc */
+        (MemAcc_MemReadFuncType)&Mem_43_INFLS_Read,                  /* ReadFunc */
+        (MemAcc_MemWriteFuncType)&Mem_43_INFLS_Write,                /* WriteFunc */
+        (MemAcc_MemEraseFuncType)&Mem_43_INFLS_Erase,                /* EraseFunc */
+        (MemAcc_MemBlankCheckFuncType)&Mem_43_INFLS_BlankCheck,      /* BlankCheckFunc */
         NULL_PTR,                                                    /* PropagateErrorFunc */
         NULL_PTR,                                                    /* SuspendFunc */
         NULL_PTR,                                                    /* ResumeFunc */
-        (MemAcc_MemHwSpecificServiceFuncType)Mem_43_INFLS_HwSpecificService /* HwSpecificServiceFunc */
+        (MemAcc_MemHwSpecificServiceFuncType)&Mem_43_INFLS_HwSpecificService /* HwSpecificServiceFunc */
     }
 };
 
@@ -175,10 +172,10 @@ static MemAcc_MemApiType MemAcc_MemApis[1] =
 /* Configuration of mem driver invocation type */
 static const MemAcc_MemInvocationType MemAcc_MemInvocation[1U] =     
 {
-    MEMACC_MEM_INDIRECT_STATIC
+    MEMACC_MEM_DIRECT_STATIC
 };
 /* Configuration of sub address areas */
-static const MemAcc_SubAddressAreaType MemAcc_MemAccAddressAreaConfiguration_0_SubAreas[4U] = 
+static const MemAcc_SubAddressAreaType MemAcc_MemAccAddressAreaConfiguration_0_SubAreas[16U] = 
 {
     {                                                                
         /* MemAccSubAddressAreaConfiguration_0 */                    
@@ -187,9 +184,9 @@ static const MemAcc_SubAddressAreaType MemAcc_MemAccAddressAreaConfiguration_0_S
         8192U,                                                       /* Length */
         0U,                                                          /* NumOfEraseRetries */
         0U,                                                          /* NumOfWriteRetries */
-        0U | MEMACC_BURST_READ,                                      /* BurstSettings */
-        MEMACC_MEM_INDIRECT_STATIC,                                  /* MemInvocation */
-        &(MemAcc_MemApis[0]),                                        /* MemApi */
+        0U | MEMACC_BURST_READ | MEMACC_BURST_WRITE,                 /* BurstSettings */
+        MEMACC_MEM_DIRECT_STATIC,                                    /* MemInvocation */
+        &(MemAcc_MemApis[MEMACC_MEM_43_INFLS_DRIVER_ID]),            /* MemApi */
         0U,                                                          /* MemInstanceId */
         {                                                            
             8192U,                                                   /* SectorEraseSize           */
@@ -197,10 +194,10 @@ static const MemAcc_SubAddressAreaType MemAcc_MemAccAddressAreaConfiguration_0_S
             8U,                                                      /* WritePageSize             */
             8192U,                                                   /* SectorEraseBurstSize      */
             8192U,                                                   /* ReadPageBurstSize         */
-            8U                                                       /* WritePageBurstSize        */
+            128U                                                     /* WritePageBurstSize        */
         },                                                           
-        MEMACC_MEM_HW_INTERNAL,                                      /* MemHwResource     */
-        MEMACC_MEM_43_INFLS_HW_ID                                    /* MemoryDriverHwId  */
+        MEMACC_MEM_43_INFLS_MEMINSTANCE_0_ID,                        /* MemoryHardwareInstanceId  */
+        MEMACC_MEM_43_INFLS_DRIVER_ID                                /* MemoryDriverId            */
     },
     {                                                                
         /* MemAccSubAddressAreaConfiguration_1 */                    
@@ -209,9 +206,9 @@ static const MemAcc_SubAddressAreaType MemAcc_MemAccAddressAreaConfiguration_0_S
         8192U,                                                       /* Length */
         0U,                                                          /* NumOfEraseRetries */
         0U,                                                          /* NumOfWriteRetries */
-        0U | MEMACC_BURST_READ,                                      /* BurstSettings */
-        MEMACC_MEM_INDIRECT_STATIC,                                  /* MemInvocation */
-        &(MemAcc_MemApis[0]),                                        /* MemApi */
+        0U | MEMACC_BURST_READ | MEMACC_BURST_WRITE,                 /* BurstSettings */
+        MEMACC_MEM_DIRECT_STATIC,                                    /* MemInvocation */
+        &(MemAcc_MemApis[MEMACC_MEM_43_INFLS_DRIVER_ID]),            /* MemApi */
         0U,                                                          /* MemInstanceId */
         {                                                            
             8192U,                                                   /* SectorEraseSize           */
@@ -219,10 +216,10 @@ static const MemAcc_SubAddressAreaType MemAcc_MemAccAddressAreaConfiguration_0_S
             8U,                                                      /* WritePageSize             */
             8192U,                                                   /* SectorEraseBurstSize      */
             8192U,                                                   /* ReadPageBurstSize         */
-            8U                                                       /* WritePageBurstSize        */
+            128U                                                     /* WritePageBurstSize        */
         },                                                           
-        MEMACC_MEM_HW_INTERNAL,                                      /* MemHwResource     */
-        MEMACC_MEM_43_INFLS_HW_ID                                    /* MemoryDriverHwId  */
+        MEMACC_MEM_43_INFLS_MEMINSTANCE_0_ID,                        /* MemoryHardwareInstanceId  */
+        MEMACC_MEM_43_INFLS_DRIVER_ID                                /* MemoryDriverId            */
     },
     {                                                                
         /* MemAccSubAddressAreaConfiguration_2 */                    
@@ -231,9 +228,9 @@ static const MemAcc_SubAddressAreaType MemAcc_MemAccAddressAreaConfiguration_0_S
         8192U,                                                       /* Length */
         0U,                                                          /* NumOfEraseRetries */
         0U,                                                          /* NumOfWriteRetries */
-        0U | MEMACC_BURST_READ,                                      /* BurstSettings */
-        MEMACC_MEM_INDIRECT_STATIC,                                  /* MemInvocation */
-        &(MemAcc_MemApis[0]),                                        /* MemApi */
+        0U | MEMACC_BURST_READ | MEMACC_BURST_WRITE,                 /* BurstSettings */
+        MEMACC_MEM_DIRECT_STATIC,                                    /* MemInvocation */
+        &(MemAcc_MemApis[MEMACC_MEM_43_INFLS_DRIVER_ID]),            /* MemApi */
         0U,                                                          /* MemInstanceId */
         {                                                            
             8192U,                                                   /* SectorEraseSize           */
@@ -241,10 +238,10 @@ static const MemAcc_SubAddressAreaType MemAcc_MemAccAddressAreaConfiguration_0_S
             8U,                                                      /* WritePageSize             */
             8192U,                                                   /* SectorEraseBurstSize      */
             8192U,                                                   /* ReadPageBurstSize         */
-            8U                                                       /* WritePageBurstSize        */
+            128U                                                     /* WritePageBurstSize        */
         },                                                           
-        MEMACC_MEM_HW_INTERNAL,                                      /* MemHwResource     */
-        MEMACC_MEM_43_INFLS_HW_ID                                    /* MemoryDriverHwId  */
+        MEMACC_MEM_43_INFLS_MEMINSTANCE_0_ID,                        /* MemoryHardwareInstanceId  */
+        MEMACC_MEM_43_INFLS_DRIVER_ID                                /* MemoryDriverId            */
     },
     {                                                                
         /* MemAccSubAddressAreaConfiguration_3 */                    
@@ -253,9 +250,9 @@ static const MemAcc_SubAddressAreaType MemAcc_MemAccAddressAreaConfiguration_0_S
         8192U,                                                       /* Length */
         0U,                                                          /* NumOfEraseRetries */
         0U,                                                          /* NumOfWriteRetries */
-        0U | MEMACC_BURST_READ,                                      /* BurstSettings */
-        MEMACC_MEM_INDIRECT_STATIC,                                  /* MemInvocation */
-        &(MemAcc_MemApis[0]),                                        /* MemApi */
+        0U | MEMACC_BURST_READ | MEMACC_BURST_WRITE,                 /* BurstSettings */
+        MEMACC_MEM_DIRECT_STATIC,                                    /* MemInvocation */
+        &(MemAcc_MemApis[MEMACC_MEM_43_INFLS_DRIVER_ID]),            /* MemApi */
         0U,                                                          /* MemInstanceId */
         {                                                            
             8192U,                                                   /* SectorEraseSize           */
@@ -263,10 +260,274 @@ static const MemAcc_SubAddressAreaType MemAcc_MemAccAddressAreaConfiguration_0_S
             8U,                                                      /* WritePageSize             */
             8192U,                                                   /* SectorEraseBurstSize      */
             8192U,                                                   /* ReadPageBurstSize         */
-            8U                                                       /* WritePageBurstSize        */
+            128U                                                     /* WritePageBurstSize        */
         },                                                           
-        MEMACC_MEM_HW_INTERNAL,                                      /* MemHwResource     */
-        MEMACC_MEM_43_INFLS_HW_ID                                    /* MemoryDriverHwId  */
+        MEMACC_MEM_43_INFLS_MEMINSTANCE_0_ID,                        /* MemoryHardwareInstanceId  */
+        MEMACC_MEM_43_INFLS_DRIVER_ID                                /* MemoryDriverId            */
+    },
+    {                                                                
+        /* MemAccSubAddressAreaConfiguration_4 */                    
+        32768U,                                                      /* LogicalStartAddress */
+        268468224U,                                                  /* PhysicalStartAddress */
+        8192U,                                                       /* Length */
+        0U,                                                          /* NumOfEraseRetries */
+        0U,                                                          /* NumOfWriteRetries */
+        0U | MEMACC_BURST_READ | MEMACC_BURST_WRITE,                 /* BurstSettings */
+        MEMACC_MEM_DIRECT_STATIC,                                    /* MemInvocation */
+        &(MemAcc_MemApis[MEMACC_MEM_43_INFLS_DRIVER_ID]),            /* MemApi */
+        0U,                                                          /* MemInstanceId */
+        {                                                            
+            8192U,                                                   /* SectorEraseSize           */
+            1U,                                                      /* ReadPageSize              */
+            8U,                                                      /* WritePageSize             */
+            8192U,                                                   /* SectorEraseBurstSize      */
+            8192U,                                                   /* ReadPageBurstSize         */
+            128U                                                     /* WritePageBurstSize        */
+        },                                                           
+        MEMACC_MEM_43_INFLS_MEMINSTANCE_0_ID,                        /* MemoryHardwareInstanceId  */
+        MEMACC_MEM_43_INFLS_DRIVER_ID                                /* MemoryDriverId            */
+    },
+    {                                                                
+        /* MemAccSubAddressAreaConfiguration_5 */                    
+        40960U,                                                      /* LogicalStartAddress */
+        268476416U,                                                  /* PhysicalStartAddress */
+        8192U,                                                       /* Length */
+        0U,                                                          /* NumOfEraseRetries */
+        0U,                                                          /* NumOfWriteRetries */
+        0U | MEMACC_BURST_READ | MEMACC_BURST_WRITE,                 /* BurstSettings */
+        MEMACC_MEM_DIRECT_STATIC,                                    /* MemInvocation */
+        &(MemAcc_MemApis[MEMACC_MEM_43_INFLS_DRIVER_ID]),            /* MemApi */
+        0U,                                                          /* MemInstanceId */
+        {                                                            
+            8192U,                                                   /* SectorEraseSize           */
+            1U,                                                      /* ReadPageSize              */
+            8U,                                                      /* WritePageSize             */
+            8192U,                                                   /* SectorEraseBurstSize      */
+            8192U,                                                   /* ReadPageBurstSize         */
+            128U                                                     /* WritePageBurstSize        */
+        },                                                           
+        MEMACC_MEM_43_INFLS_MEMINSTANCE_0_ID,                        /* MemoryHardwareInstanceId  */
+        MEMACC_MEM_43_INFLS_DRIVER_ID                                /* MemoryDriverId            */
+    },
+    {                                                                
+        /* MemAccSubAddressAreaConfiguration_6 */                    
+        49152U,                                                      /* LogicalStartAddress */
+        268484608U,                                                  /* PhysicalStartAddress */
+        8192U,                                                       /* Length */
+        0U,                                                          /* NumOfEraseRetries */
+        0U,                                                          /* NumOfWriteRetries */
+        0U | MEMACC_BURST_READ | MEMACC_BURST_WRITE,                 /* BurstSettings */
+        MEMACC_MEM_DIRECT_STATIC,                                    /* MemInvocation */
+        &(MemAcc_MemApis[MEMACC_MEM_43_INFLS_DRIVER_ID]),            /* MemApi */
+        0U,                                                          /* MemInstanceId */
+        {                                                            
+            8192U,                                                   /* SectorEraseSize           */
+            1U,                                                      /* ReadPageSize              */
+            8U,                                                      /* WritePageSize             */
+            8192U,                                                   /* SectorEraseBurstSize      */
+            8192U,                                                   /* ReadPageBurstSize         */
+            128U                                                     /* WritePageBurstSize        */
+        },                                                           
+        MEMACC_MEM_43_INFLS_MEMINSTANCE_0_ID,                        /* MemoryHardwareInstanceId  */
+        MEMACC_MEM_43_INFLS_DRIVER_ID                                /* MemoryDriverId            */
+    },
+    {                                                                
+        /* MemAccSubAddressAreaConfiguration_7 */                    
+        57344U,                                                      /* LogicalStartAddress */
+        268492800U,                                                  /* PhysicalStartAddress */
+        8192U,                                                       /* Length */
+        0U,                                                          /* NumOfEraseRetries */
+        0U,                                                          /* NumOfWriteRetries */
+        0U | MEMACC_BURST_READ | MEMACC_BURST_WRITE,                 /* BurstSettings */
+        MEMACC_MEM_DIRECT_STATIC,                                    /* MemInvocation */
+        &(MemAcc_MemApis[MEMACC_MEM_43_INFLS_DRIVER_ID]),            /* MemApi */
+        0U,                                                          /* MemInstanceId */
+        {                                                            
+            8192U,                                                   /* SectorEraseSize           */
+            1U,                                                      /* ReadPageSize              */
+            8U,                                                      /* WritePageSize             */
+            8192U,                                                   /* SectorEraseBurstSize      */
+            8192U,                                                   /* ReadPageBurstSize         */
+            128U                                                     /* WritePageBurstSize        */
+        },                                                           
+        MEMACC_MEM_43_INFLS_MEMINSTANCE_0_ID,                        /* MemoryHardwareInstanceId  */
+        MEMACC_MEM_43_INFLS_DRIVER_ID                                /* MemoryDriverId            */
+    },
+    {                                                                
+        /* MemAccSubAddressAreaConfiguration_8 */                    
+        65536U,                                                      /* LogicalStartAddress */
+        268500992U,                                                  /* PhysicalStartAddress */
+        8192U,                                                       /* Length */
+        0U,                                                          /* NumOfEraseRetries */
+        0U,                                                          /* NumOfWriteRetries */
+        0U | MEMACC_BURST_READ | MEMACC_BURST_WRITE,                 /* BurstSettings */
+        MEMACC_MEM_DIRECT_STATIC,                                    /* MemInvocation */
+        &(MemAcc_MemApis[MEMACC_MEM_43_INFLS_DRIVER_ID]),            /* MemApi */
+        0U,                                                          /* MemInstanceId */
+        {                                                            
+            8192U,                                                   /* SectorEraseSize           */
+            1U,                                                      /* ReadPageSize              */
+            8U,                                                      /* WritePageSize             */
+            8192U,                                                   /* SectorEraseBurstSize      */
+            8192U,                                                   /* ReadPageBurstSize         */
+            128U                                                     /* WritePageBurstSize        */
+        },                                                           
+        MEMACC_MEM_43_INFLS_MEMINSTANCE_0_ID,                        /* MemoryHardwareInstanceId  */
+        MEMACC_MEM_43_INFLS_DRIVER_ID                                /* MemoryDriverId            */
+    },
+    {                                                                
+        /* MemAccSubAddressAreaConfiguration_9 */                    
+        73728U,                                                      /* LogicalStartAddress */
+        268509184U,                                                  /* PhysicalStartAddress */
+        8192U,                                                       /* Length */
+        0U,                                                          /* NumOfEraseRetries */
+        0U,                                                          /* NumOfWriteRetries */
+        0U | MEMACC_BURST_READ | MEMACC_BURST_WRITE,                 /* BurstSettings */
+        MEMACC_MEM_DIRECT_STATIC,                                    /* MemInvocation */
+        &(MemAcc_MemApis[MEMACC_MEM_43_INFLS_DRIVER_ID]),            /* MemApi */
+        0U,                                                          /* MemInstanceId */
+        {                                                            
+            8192U,                                                   /* SectorEraseSize           */
+            1U,                                                      /* ReadPageSize              */
+            8U,                                                      /* WritePageSize             */
+            8192U,                                                   /* SectorEraseBurstSize      */
+            8192U,                                                   /* ReadPageBurstSize         */
+            128U                                                     /* WritePageBurstSize        */
+        },                                                           
+        MEMACC_MEM_43_INFLS_MEMINSTANCE_0_ID,                        /* MemoryHardwareInstanceId  */
+        MEMACC_MEM_43_INFLS_DRIVER_ID                                /* MemoryDriverId            */
+    },
+    {                                                                
+        /* MemAccSubAddressAreaConfiguration_10 */                   
+        81920U,                                                      /* LogicalStartAddress */
+        268517376U,                                                  /* PhysicalStartAddress */
+        8192U,                                                       /* Length */
+        0U,                                                          /* NumOfEraseRetries */
+        0U,                                                          /* NumOfWriteRetries */
+        0U | MEMACC_BURST_READ | MEMACC_BURST_WRITE,                 /* BurstSettings */
+        MEMACC_MEM_DIRECT_STATIC,                                    /* MemInvocation */
+        &(MemAcc_MemApis[MEMACC_MEM_43_INFLS_DRIVER_ID]),            /* MemApi */
+        0U,                                                          /* MemInstanceId */
+        {                                                            
+            8192U,                                                   /* SectorEraseSize           */
+            1U,                                                      /* ReadPageSize              */
+            8U,                                                      /* WritePageSize             */
+            8192U,                                                   /* SectorEraseBurstSize      */
+            8192U,                                                   /* ReadPageBurstSize         */
+            128U                                                     /* WritePageBurstSize        */
+        },                                                           
+        MEMACC_MEM_43_INFLS_MEMINSTANCE_0_ID,                        /* MemoryHardwareInstanceId  */
+        MEMACC_MEM_43_INFLS_DRIVER_ID                                /* MemoryDriverId            */
+    },
+    {                                                                
+        /* MemAccSubAddressAreaConfiguration_11 */                   
+        90112U,                                                      /* LogicalStartAddress */
+        268525568U,                                                  /* PhysicalStartAddress */
+        8192U,                                                       /* Length */
+        0U,                                                          /* NumOfEraseRetries */
+        0U,                                                          /* NumOfWriteRetries */
+        0U | MEMACC_BURST_READ | MEMACC_BURST_WRITE,                 /* BurstSettings */
+        MEMACC_MEM_DIRECT_STATIC,                                    /* MemInvocation */
+        &(MemAcc_MemApis[MEMACC_MEM_43_INFLS_DRIVER_ID]),            /* MemApi */
+        0U,                                                          /* MemInstanceId */
+        {                                                            
+            8192U,                                                   /* SectorEraseSize           */
+            1U,                                                      /* ReadPageSize              */
+            8U,                                                      /* WritePageSize             */
+            8192U,                                                   /* SectorEraseBurstSize      */
+            8192U,                                                   /* ReadPageBurstSize         */
+            128U                                                     /* WritePageBurstSize        */
+        },                                                           
+        MEMACC_MEM_43_INFLS_MEMINSTANCE_0_ID,                        /* MemoryHardwareInstanceId  */
+        MEMACC_MEM_43_INFLS_DRIVER_ID                                /* MemoryDriverId            */
+    },
+    {                                                                
+        /* MemAccSubAddressAreaConfiguration_12 */                   
+        98304U,                                                      /* LogicalStartAddress */
+        268533760U,                                                  /* PhysicalStartAddress */
+        8192U,                                                       /* Length */
+        0U,                                                          /* NumOfEraseRetries */
+        0U,                                                          /* NumOfWriteRetries */
+        0U | MEMACC_BURST_READ | MEMACC_BURST_WRITE,                 /* BurstSettings */
+        MEMACC_MEM_DIRECT_STATIC,                                    /* MemInvocation */
+        &(MemAcc_MemApis[MEMACC_MEM_43_INFLS_DRIVER_ID]),            /* MemApi */
+        0U,                                                          /* MemInstanceId */
+        {                                                            
+            8192U,                                                   /* SectorEraseSize           */
+            1U,                                                      /* ReadPageSize              */
+            8U,                                                      /* WritePageSize             */
+            8192U,                                                   /* SectorEraseBurstSize      */
+            8192U,                                                   /* ReadPageBurstSize         */
+            128U                                                     /* WritePageBurstSize        */
+        },                                                           
+        MEMACC_MEM_43_INFLS_MEMINSTANCE_0_ID,                        /* MemoryHardwareInstanceId  */
+        MEMACC_MEM_43_INFLS_DRIVER_ID                                /* MemoryDriverId            */
+    },
+    {                                                                
+        /* MemAccSubAddressAreaConfiguration_13 */                   
+        106496U,                                                     /* LogicalStartAddress */
+        268541952U,                                                  /* PhysicalStartAddress */
+        8192U,                                                       /* Length */
+        0U,                                                          /* NumOfEraseRetries */
+        0U,                                                          /* NumOfWriteRetries */
+        0U | MEMACC_BURST_READ | MEMACC_BURST_WRITE,                 /* BurstSettings */
+        MEMACC_MEM_DIRECT_STATIC,                                    /* MemInvocation */
+        &(MemAcc_MemApis[MEMACC_MEM_43_INFLS_DRIVER_ID]),            /* MemApi */
+        0U,                                                          /* MemInstanceId */
+        {                                                            
+            8192U,                                                   /* SectorEraseSize           */
+            1U,                                                      /* ReadPageSize              */
+            8U,                                                      /* WritePageSize             */
+            8192U,                                                   /* SectorEraseBurstSize      */
+            8192U,                                                   /* ReadPageBurstSize         */
+            128U                                                     /* WritePageBurstSize        */
+        },                                                           
+        MEMACC_MEM_43_INFLS_MEMINSTANCE_0_ID,                        /* MemoryHardwareInstanceId  */
+        MEMACC_MEM_43_INFLS_DRIVER_ID                                /* MemoryDriverId            */
+    },
+    {                                                                
+        /* MemAccSubAddressAreaConfiguration_14 */                   
+        114688U,                                                     /* LogicalStartAddress */
+        268550144U,                                                  /* PhysicalStartAddress */
+        8192U,                                                       /* Length */
+        0U,                                                          /* NumOfEraseRetries */
+        0U,                                                          /* NumOfWriteRetries */
+        0U | MEMACC_BURST_READ | MEMACC_BURST_WRITE,                 /* BurstSettings */
+        MEMACC_MEM_DIRECT_STATIC,                                    /* MemInvocation */
+        &(MemAcc_MemApis[MEMACC_MEM_43_INFLS_DRIVER_ID]),            /* MemApi */
+        0U,                                                          /* MemInstanceId */
+        {                                                            
+            8192U,                                                   /* SectorEraseSize           */
+            1U,                                                      /* ReadPageSize              */
+            8U,                                                      /* WritePageSize             */
+            8192U,                                                   /* SectorEraseBurstSize      */
+            8192U,                                                   /* ReadPageBurstSize         */
+            128U                                                     /* WritePageBurstSize        */
+        },                                                           
+        MEMACC_MEM_43_INFLS_MEMINSTANCE_0_ID,                        /* MemoryHardwareInstanceId  */
+        MEMACC_MEM_43_INFLS_DRIVER_ID                                /* MemoryDriverId            */
+    },
+    {                                                                
+        /* MemAccSubAddressAreaConfiguration_15 */                   
+        122880U,                                                     /* LogicalStartAddress */
+        268558336U,                                                  /* PhysicalStartAddress */
+        8192U,                                                       /* Length */
+        0U,                                                          /* NumOfEraseRetries */
+        0U,                                                          /* NumOfWriteRetries */
+        0U | MEMACC_BURST_READ | MEMACC_BURST_WRITE,                 /* BurstSettings */
+        MEMACC_MEM_DIRECT_STATIC,                                    /* MemInvocation */
+        &(MemAcc_MemApis[MEMACC_MEM_43_INFLS_DRIVER_ID]),            /* MemApi */
+        0U,                                                          /* MemInstanceId */
+        {                                                            
+            8192U,                                                   /* SectorEraseSize           */
+            1U,                                                      /* ReadPageSize              */
+            8U,                                                      /* WritePageSize             */
+            8192U,                                                   /* SectorEraseBurstSize      */
+            8192U,                                                   /* ReadPageBurstSize         */
+            128U                                                     /* WritePageBurstSize        */
+        },                                                           
+        MEMACC_MEM_43_INFLS_MEMINSTANCE_0_ID,                        /* MemoryHardwareInstanceId  */
+        MEMACC_MEM_43_INFLS_DRIVER_ID                                /* MemoryDriverId            */
     }
 };
 
@@ -276,11 +537,11 @@ static const MemAcc_AddressAreaType MemAcc_AddressAreas[1] =
     {
         /* MemAccAddressAreaConfiguration_0 */                       
         0U,                                                          /* AreaId */
-        32768U,                                                      /* AreaLength */
+        131072U,                                                     /* AreaLength */
         0U,                                                          /* Priority */
         1U,                                                          /* BufferAlignment */
-        Fee_JobEndNotification,                                      /* JobEndNotif */
-        4U,                                                          /* SubAreaCount */
+        NULL_PTR,                                                    /* JobEndNotif */
+        16U,                                                         /* SubAreaCount */
         MemAcc_MemAccAddressAreaConfiguration_0_SubAreas             /* SubAreas */
     }
 };

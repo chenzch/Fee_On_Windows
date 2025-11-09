@@ -123,6 +123,15 @@
     <ClInclude Include="include\SchM_MemAcc.h">
       <Filter>支持头文件</Filter>
     </ClInclude>
+    <ClInclude Include="RTD\include\C40_Ip_TrustedFunctions.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RTD\include\Mem_43_INFLS_Software_Semaphore.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RTD\include\MemAcc_Sema4.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="generate\src\C40_Ip_Cfg.c">
@@ -156,6 +165,12 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="src\main.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="RTD\src\MemAcc_Sema4.c">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="RTD\src\Mem_43_INFLS_Software_Semaphore.c">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

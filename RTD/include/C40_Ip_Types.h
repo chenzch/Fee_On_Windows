@@ -7,10 +7,10 @@
 *   Autosar Version      : 4.7.0
 *   Autosar Revision     : ASR_REL_4_7_REV_0000
 *   Autosar Conf.Variant :
-*   SW Version           : 4.0.0
-*   Build Version        : S32K3_RTD_4_0_0_HF02_D2407_ASR_REL_4_7_REV_0000_20240725
+*   SW Version           : 6.0.0
+*   Build Version        : S32K3_RTD_6_0_0_D2506_ASR_REL_4_7_REV_0000_20250610
 *
-*   Copyright 2020 - 2024 NXP
+*   Copyright 2020 - 2025 NXP
 *
 *   NXP Confidential and Proprietary. This software is owned or controlled by NXP and may only be
 *   used strictly in accordance with the applicable license terms. By expressly
@@ -43,7 +43,7 @@ extern "C"{
 * 2) needed interfaces from external units
 * 3) internal and external interfaces from this unit
 ==================================================================================================*/
-#include "StandardTypes.h"
+#include "Std_Types.h"
 
 /*==================================================================================================
 *                              SOURCE FILE VERSION INFORMATION
@@ -52,7 +52,7 @@ extern "C"{
 #define C40_IP_TYPES_AR_RELEASE_MAJOR_VERSION_CFG     4
 #define C40_IP_TYPES_AR_RELEASE_MINOR_VERSION_CFG     7
 #define C40_IP_TYPES_AR_RELEASE_REVISION_VERSION_CFG  0
-#define C40_IP_TYPES_SW_MAJOR_VERSION_CFG             4
+#define C40_IP_TYPES_SW_MAJOR_VERSION_CFG             6
 #define C40_IP_TYPES_SW_MINOR_VERSION_CFG             0
 #define C40_IP_TYPES_SW_PATCH_VERSION_CFG             0
 
@@ -60,11 +60,11 @@ extern "C"{
 *                                     FILE VERSION CHECKS
 ==================================================================================================*/
 #ifndef DISABLE_MCAL_INTERMODULE_ASR_CHECK
-    /* Check if C40_Ip_Types header file and StandardTypes.h header file are of the same Autosar version */
+    /* Check if C40_Ip_Types header file and Std_Types.h header file are of the same Autosar version */
     #if ((C40_IP_TYPES_AR_RELEASE_MAJOR_VERSION_CFG != STD_AR_RELEASE_MAJOR_VERSION) || \
          (C40_IP_TYPES_AR_RELEASE_MINOR_VERSION_CFG != STD_AR_RELEASE_MINOR_VERSION) \
         )
-        #error "Autosar Version Numbers of C40_Ip_Types.h and StandardTypes.h are different"
+        #error "Autosar Version Numbers of C40_Ip_Types.h and Std_Types.h are different"
     #endif
 #endif
 
@@ -105,11 +105,6 @@ extern "C"{
  * @brief  For UTE bit, the password 0xF9F9_9999 must be written to the UT0 register, and this must be a 32bit write
  */
 #define C40_IP_USER_TEST_PASSWORD    (0xF9F99999U)
-/**
- * @brief  Time out for wait done
- */
-#define C40_IP_USER_TEST_WAIT        (450U)
-
 
 /*! @brief the number of bytes uses to compare (1 byte) */
 #define C40_IP_SIZE_1BYTE            (1U)
@@ -117,19 +112,14 @@ extern "C"{
 #define C40_IP_SIZE_2BYTE            (2U)
 /*! @brief the number of bytes uses to compare (4 byte) */
 #define C40_IP_SIZE_4BYTE            (4U)
-
+/*! @brief the size of a double word in byte */
+#define C40_IP_DWORD_SIZE            (8U)
+/*! @brief the size of a page in byte */
+#define C40_IP_PAGE_SIZE             (32U)
 
 /*==================================================================================================
                                  ENUM TYPEDEFS
 ==================================================================================================*/
-
-/*!
- * @brief C40 hardware instance
- */
-typedef enum
-{
-    C40_IP_INSTANCE_0 = 0x00U,  /*!< C40 hardware instance 0 */
-} C40_Ip_InstanceType;
 
 /*!
  * @brief Enumeration of checking status errors or not.
@@ -160,8 +150,12 @@ typedef enum
     C40_IP_CODE_BLOCK_1  = 0x01U,  /*!< code block number 1 */
     C40_IP_CODE_BLOCK_2  = 0x02U,  /*!< code block number 2 */
     C40_IP_CODE_BLOCK_3  = 0x03U,  /*!< code block number 3 */
-    C40_IP_DATA_BLOCK    = 0x04U,  /*!< data block          */
-    C40_IP_BLOCK_UTEST   = 0x05U,  /*!< block Utest         */
+    C40_IP_CODE_BLOCK_4  = 0x04U,  /*!< code block number 4 */
+    C40_IP_CODE_BLOCK_5  = 0x05U,  /*!< code block number 5 */
+    C40_IP_CODE_BLOCK_6  = 0x06U,  /*!< code block number 6 */
+    C40_IP_CODE_BLOCK_7  = 0x07U,  /*!< code block number 7 */
+    C40_IP_DATA_BLOCK    = 0x08U,  /*!< data block          */
+    C40_IP_BLOCK_UTEST   = 0x09U,  /*!< block Utest         */
     C40_IP_BLOCK_INVALID = 0xFFU   /*!< invalid block       */
 } C40_Ip_FlashBlocksNumberType;
 
@@ -227,6 +221,11 @@ typedef enum
 /*==================================================================================================
                                  STRUCTURES AND OTHER TYPEDEFS
 ==================================================================================================*/
+
+/*!
+ * @brief       C40 Virtual Sectors Type
+ */
+typedef uint32 C40_Ip_VirtualSectorsType;
 
 /**
  * @brief       Utest Config Type

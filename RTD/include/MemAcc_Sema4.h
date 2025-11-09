@@ -21,11 +21,11 @@
 *   activate or otherwise use the software.
 ==================================================================================================*/
 
-#ifndef MEMACC_PBCFG_H
-#define MEMACC_PBCFG_H
+#ifndef MEMACC_SEMA4_H
+#define MEMACC_SEMA4_H
 
 /**
-*   @file MemAcc_PBcfg.h
+*   @file MemAcc_Sema4.h
 *
 *   @addtogroup MEMACC
 *   @{
@@ -42,55 +42,30 @@ extern "C"{
 * 2) needed interfaces from external units
 * 3) internal and external interfaces from this unit
 ==================================================================================================*/
-#include "MemAcc_Types.h"
 
-
+#if (STD_ON == MEMACC_MULTI_PARTITION_TYPE_1_ENABLED)
 /*==================================================================================================
 *                                 SOURCE FILE VERSION INFORMATION
 ==================================================================================================*/
-#define MEMACC_PBCFG_VENDOR_ID                      43
-#define MEMACC_PBCFG_AR_RELEASE_MAJOR_VERSION       4
-#define MEMACC_PBCFG_AR_RELEASE_MINOR_VERSION       7
-#define MEMACC_PBCFG_AR_RELEASE_REVISION_VERSION    0
-#define MEMACC_PBCFG_SW_MAJOR_VERSION               6
-#define MEMACC_PBCFG_SW_MINOR_VERSION               0
-#define MEMACC_PBCFG_SW_PATCH_VERSION               0
-
+#define MEMACC_SEMA4_VENDOR_ID                      43
+#define MEMACC_SEMA4_AR_RELEASE_MAJOR_VERSION       4
+#define MEMACC_SEMA4_AR_RELEASE_MINOR_VERSION       7
+#define MEMACC_SEMA4_AR_RELEASE_REVISION_VERSION    0
+#define MEMACC_SEMA4_SW_MAJOR_VERSION               6
+#define MEMACC_SEMA4_SW_MINOR_VERSION               0
+#define MEMACC_SEMA4_SW_PATCH_VERSION               0
 
 /*==================================================================================================
 *                                       FILE VERSION CHECKS
 ==================================================================================================*/
 
-/* Check if current file and MemAcc_Types.h file are of the same vendor */
-#if (MEMACC_PBCFG_VENDOR_ID != MEMACC_TYPES_VENDOR_ID)
-    #error "MemAcc_PBcfg.h and MemAcc_Types.h have different vendor ids"
-#endif
-/* Check if current file and MemAcc_Types.h file are of the same Autosar version */
-#if ((MEMACC_PBCFG_AR_RELEASE_MAJOR_VERSION    != MEMACC_TYPES_AR_RELEASE_MAJOR_VERSION) || \
-     (MEMACC_PBCFG_AR_RELEASE_MINOR_VERSION    != MEMACC_TYPES_AR_RELEASE_MINOR_VERSION) || \
-     (MEMACC_PBCFG_AR_RELEASE_REVISION_VERSION != MEMACC_TYPES_AR_RELEASE_REVISION_VERSION) \
-    )
-    #error "AutoSar Version Numbers of MemAcc_PBcfg.h and MemAcc_Types.h are different"
-#endif
-/* Check if current file and MemAcc_Types.h file are of the same software version */
-#if ((MEMACC_PBCFG_SW_MAJOR_VERSION != MEMACC_TYPES_SW_MAJOR_VERSION) || \
-     (MEMACC_PBCFG_SW_MINOR_VERSION != MEMACC_TYPES_SW_MINOR_VERSION) || \
-     (MEMACC_PBCFG_SW_PATCH_VERSION != MEMACC_TYPES_SW_PATCH_VERSION) \
-    )
-    #error "Software Version Numbers of MemAcc_PBcfg.h and MemAcc_Types.h are different"
-#endif
+/*==================================================================================================
+*                                       DEFINES AND MACROS
+==================================================================================================*/
 
 /*==================================================================================================
 *                                            CONSTANTS
 ==================================================================================================*/
-
-/*==================================================================================================
-*                                       DEFINES AND MACROS
-==================================================================================================*/
-#define MEMACC_CONFIG_PB \
-    extern const MemAcc_ConfigType MemAcc_Config;
-/* MemAcc address areas unique id */
-#define MEMACC_ADDRESS_AREA_0_ID        (0U)
 
 /*==================================================================================================
 *                                              ENUMS
@@ -103,16 +78,115 @@ extern "C"{
 /*==================================================================================================
 *                                  GLOBAL VARIABLE DECLARATIONS
 ==================================================================================================*/
+#if (MEMACC_MULTI_PARTITION_TYPE_3_ENABLED == STD_ON)
+#define MEMACC_START_SEC_VAR_SHARED_CLEARED_UNSPECIFIED_NO_CACHEABLE
+#else
+#define MEMACC_START_SEC_VAR_CLEARED_UNSPECIFIED
+#endif
+#include "MemAcc_MemMap.h"
+
+/* Pointer to current memacc module configuration set */
+extern const MemAcc_ConfigType            *MemAcc_pConfigPtr;
+
+#if (MEMACC_MULTI_PARTITION_TYPE_3_ENABLED == STD_ON)
+#define MEMACC_STOP_SEC_VAR_SHARED_CLEARED_UNSPECIFIED_NO_CACHEABLE
+#else
+#define MEMACC_STOP_SEC_VAR_CLEARED_UNSPECIFIED
+#endif
+#include "MemAcc_MemMap.h"
 
 /*==================================================================================================
 *                                       FUNCTION PROTOTYPES
 ==================================================================================================*/
 
+/**
+ * @brief        The function request lock the sema4 channel.
+ *
+ * @details      Request lock function - request lock sema4 channel for current core on the mem hardware resource.
+ *
+ * @param[in]    MemHwResource    Mem resource index.
+ *
+ * @return       Std_ReturnType
+ *                  - E_OK                   : Lock sema4 successfully.
+ *                  - E_NOT_OK               : Lock sema4 fail.
+ *
+ * @pre          None.
+ *
+ * @api
+ */
+Std_ReturnType         MemAcc_Sema4_RequestLock(uint8 MemHwResource);
+/**
+ * @brief        The function request unlock the sema4 channel.
+ *
+ * @details      Request unlock function - request unlock sema4 channel for current core on the mem hardware resource.
+ *
+ * @param[in]    MemHwResource    Mem resource index.
+ *
+ * @return       None.
+ *
+ *
+ * @pre          None.
+ *
+ * @api
+ */
+void                   MemAcc_Sema4_ReleaseLock(uint8 MemHwResource);
+
+/**
+ * @brief        The function request lock the sema4 channel when initializing the driver.
+ *
+ * @details      Request lock function - request lock sema4 channel for current core on all mem hardware resource.
+ *
+ * @param[in]    MemHwResource    Mem resource index.
+ *
+ * @return       Std_ReturnType
+ *                  - E_OK                   : Lock sema4 successfully.
+ *                  - E_NOT_OK               : Lock sema4 fail.
+ *
+ * @pre          None.
+ *
+ * @api
+ */
+Std_ReturnType         MemAcc_Sema4_InitLock(void);
+
+/**
+ * @brief        The function request lock the sema4 channel when initializing the driver.
+ *
+ * @details      Request unlock function - request unlock sema4 channel for current core on all mem hardware resource.
+ *
+ * @param[in]    MemHwResource    Mem resource index.
+ *
+ * @return       None.
+ *
+ *
+ * @pre          None.
+ *
+ * @api
+ */
+void                   MemAcc_Sema4_InitUnLock(void);
+
+/**
+ * @brief        The function t0 check the resource is locked or not.
+ *
+ * @details      Check the locking status of the resource.
+ *
+ * @param[in]    None.
+ *
+ * @return       Std_ReturnType
+ *                  - E_OK                   : Lock sema4 successfully.
+ *                  - E_NOT_OK               : Lock sema4 fail.
+ *
+ * @pre          None.
+ *
+ * @api
+ */
+Std_ReturnType         MemAcc_Sema4_IsLocked(uint8 MemHwResource);
 
 #ifdef __cplusplus
 }
 #endif
 
+#endif  /*#if (STD_ON == MEMACC_MULTI_PARTITION_TYPE_1_ENABLED) */
+
 /** @} */
 
-#endif /* MEMACC_PBCFG_H */
+#endif /* MEMACC_H */
