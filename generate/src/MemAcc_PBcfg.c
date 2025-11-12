@@ -530,9 +530,6 @@ static const MemAcc_SubAddressAreaType MemAcc_MemAccAddressAreaConfiguration_0_S
         MEMACC_MEM_43_INFLS_DRIVER_ID                                /* MemoryDriverId            */
     }
 };
-extern void Fee_JobEndNotification(MemAcc_AddressAreaIdType    AddressAreaId,
-                                   MemAcc_JobResultType        JobResult);
-
 extern void Fee_JobEndNotification(MemAcc_AddressAreaIdType AddressAreaId, MemAcc_JobResultType JobResult);
 
 /* Configuration of address areas */
