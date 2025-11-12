@@ -531,6 +531,8 @@ static const MemAcc_SubAddressAreaType MemAcc_MemAccAddressAreaConfiguration_0_S
     }
 };
 
+extern void Fee_JobEndNotification(MemAcc_AddressAreaIdType AddressAreaId, MemAcc_JobResultType JobResult);
+
 /* Configuration of address areas */
 static const MemAcc_AddressAreaType MemAcc_AddressAreas[1] =         
 {
@@ -540,7 +542,7 @@ static const MemAcc_AddressAreaType MemAcc_AddressAreas[1] =
         131072U,                                                     /* AreaLength */
         0U,                                                          /* Priority */
         1U,                                                          /* BufferAlignment */
-        NULL_PTR,                                                    /* JobEndNotif */
+        Fee_JobEndNotification,                                                    /* JobEndNotif */
         16U,                                                         /* SubAreaCount */
         MemAcc_MemAccAddressAreaConfiguration_0_SubAreas             /* SubAreas */
     }

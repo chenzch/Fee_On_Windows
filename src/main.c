@@ -80,10 +80,13 @@ void Fee_ExampleAssert(boolean Condition)
 
 static void Fee_Wait(void) {
     MemIf_StatusType status;
+    uint32_t round = 0;
     do
     {
+		printf("Round %d\n", ++round);
         Fee_MainFunction();
         MemAcc_MainFunction();
+        Mem_43_INFLS_MainFunction();
         status = Fee_GetStatus();
     } while (status != MEMIF_IDLE);
 }
