@@ -154,7 +154,7 @@ static uint32 C40_Ip_u32ErasedSectorAddress;
 #endif /* (STD_ON == C40_IP_MAIN_INTERFACE_ENABLED) */
 
 static uint32 C40_Ip_u32SectorId;
-static uint32 C40_Ip_u32BitPosition;
+//static uint32 C40_Ip_u32BitPosition;
 static uint32 C40_Ip_u32LogicalAddressCheckFail;
 
 #define MEM_43_INFLS_STOP_SEC_VAR_CLEARED_32
@@ -1714,7 +1714,7 @@ static boolean X86_Init(void) {
                 if (pBuff) {
                     memset(pBuff, 0xFF, SubArea->Length);
                     char Filename[20];
-                    sprintf_s(& Filename[0], 20, "%08X.bin", SubArea->PhysicalStartAddress);
+                    snprintf(& Filename[0], 20, "%08X.bin", SubArea->PhysicalStartAddress);
                     FILE* pFile = fopen(Filename, "rb");
                     if (pFile != NULL) {
                         fread(pBuff, 1, SubArea->Length, pFile);
@@ -1798,7 +1798,7 @@ void X86_Unload(void) {
             if (g_BlockEntries[BlockIndex].pBuff != NULL) {
 
                 char Filename[20];
-                sprintf_s(&Filename[0], 20, "%08X.bin", g_BlockEntries[BlockIndex].StartAddr);
+                snprintf(&Filename[0], 20, "%08X.bin", g_BlockEntries[BlockIndex].StartAddr);
                 FILE* pFile = fopen(Filename, "wb+");
                 if (pFile != NULL) {
                     fwrite(g_BlockEntries[BlockIndex].pBuff, 1, g_BlockEntries[BlockIndex].Length, pFile);

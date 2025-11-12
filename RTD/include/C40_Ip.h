@@ -307,7 +307,7 @@ C40_Ip_StatusType C40_Ip_MainInterfaceWrite(uint32 LogicalAddress,
  * @brief Report Ecc UnCorrected Error for IP layer
  *
  */
-#define C40_Ip_ReportEccUnCorrectedError() 0
+#define C40_Ip_ReportEccUnCorrectedError() NULL
 #endif
 
 #ifdef __cplusplus

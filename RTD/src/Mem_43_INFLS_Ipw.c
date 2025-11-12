@@ -157,21 +157,6 @@ extern "C"{
 *                                         LOCAL VARIABLES
 ==================================================================================================*/
 
-#if (STD_ON == MEM_43_INFLS_AC_LOAD_ON_JOB_START)
-
-#define MEM_43_INFLS_START_SEC_VAR_CLEARED_8
-#include "Mem_43_INFLS_MemMap.h"
-
-/* Block of ACErase function address */
-static Mem_43_INFLS_BlockType xMemBlockAcErase;
-/* Block of ACWrite function address */
-static Mem_43_INFLS_BlockType xMemBlockAcWrite;
-
-#define MEM_43_INFLS_STOP_SEC_VAR_CLEARED_8
-#include "Mem_43_INFLS_MemMap.h"
-
-#endif /* STD_ON == MEM_43_INFLS_AC_LOAD_ON_JOB_START */
-
 /*==================================================================================================
 *                                        GLOBAL CONSTANTS
 ==================================================================================================*/

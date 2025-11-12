@@ -122,7 +122,6 @@ extern const MemAcc_ConfigType MemAcc_Config;
 */
 int main(void)
 {
-    MemIf_StatusType status = MEMIF_IDLE;
     Std_ReturnType RetValue = E_NOT_OK;
 
     Mem_43_INFLS_Init(NULL_PTR);

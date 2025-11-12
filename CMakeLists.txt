@@ -50,6 +50,10 @@ if(WIN32)
 else()
     message(STATUS "Configuring for Linux with Ninja")
     
+    # Set 32-bit compilation
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m32")
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -m32")
+
     # Set Ninja as the generator for Linux
     set(CMAKE_GENERATOR "Ninja")
     
