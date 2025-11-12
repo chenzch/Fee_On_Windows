@@ -65,10 +65,7 @@ else()
     
     # Compiler options for GCC/Clang
     target_compile_options(${PROJECT_NAME} PRIVATE
-<<<<<<< HEAD
-=======
         -g
->>>>>>> 7e83d62 (Merge fix)
         -Wall
         -Wextra
         -pedantic
