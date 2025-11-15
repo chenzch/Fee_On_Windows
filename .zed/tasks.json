@@ -1,0 +1,17 @@
+[
+  {
+    "label": "Build (zed)",
+    "command": "cmake",
+    "args": ["--build", "build", "--", "-j", "4"]
+  },
+  {
+    "label": "CMake Configure (zed)",
+    "command": "cmake",
+    "args": ["-S", ".", "-B", "build", "-G", "Ninja"]
+  },
+  {
+    "label": "Clean (zed)",
+    "command": "cmake",
+    "args": ["--build", "build", "--target", "clean"]
+  }
+]

@@ -1793,6 +1793,8 @@ static boolean X86_Erase(uint32 Address, uint32 Size) {
 }
 
 void X86_Unload(void) {
+    printf("X86_Unload Called\n");
+
     if (g_BlockEntries) {
         for (uint32_t BlockIndex = 0; BlockIndex < g_BlockEntryCount; BlockIndex++) {
             if (g_BlockEntries[BlockIndex].pBuff != NULL) {

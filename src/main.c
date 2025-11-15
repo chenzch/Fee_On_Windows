@@ -12,11 +12,6 @@
 *   This file contains sample code only. It is not part of the production code deliverables.
 */
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-
 /*==================================================================================================
 *                                        INCLUDE FILES
 * 1) system and project includes
@@ -200,80 +195,3 @@ int main(void)
 
     return RetValue;
 }
-
-#ifdef __cplusplus
-}
-#endif
-
-/** @} */
-#if 0
-void Memory_Init(void) {
-    // Mem_43_INFLS_Init(NULL_PTR);
-//    MemAcc_Init(&MemAcc_Config);
-//    Fee_Init(NULL_PTR);
-}
-
-bool Memory_MainFunction(void) {
-    //    Fee_MainFunction();
-    //    MemAcc_MainFunction();
-        // Mem_43_INFLS_MainFunction();
-    //    return MEMIF_IDLE != Fee_GetStatus();
-    return false;
-}
-
-bool Memory_Success(void) {
-    //    return MEMIF_JOB_OK == Fee_GetJobResult();
-    return true;
-}
-
-static bool BlockRead(uint32_t BlockID, uint32_t Offset, uint8_t* pData, size_t Length) {
-    if ((BlockID < BLOCKCOUNT) && (E_OK == Fee_Read((uint16)BlockID, (uint16)Offset, pData, (uint16)Length))) {
-        while (Memory_MainFunction())
-            ;
-        return Memory_Success();
-    }
-    else {
-        return false;
-    }
-}
-
-static bool BlockWrite(uint32_t BlockID, uint32_t Offset, uint8_t* pData, size_t Length) {
-    if ((BlockID >= BLOCKCOUNT) || ((Offset + Length) > BLOCKSIZE)) {
-        return false;
-    }
-
-    uint8_t tempBlock[BLOCKSIZE];
-
-    // A partial write requires reading the block first.
-    if ((Offset > 0) || (Length < BLOCKSIZE)) {
-        if (E_OK != Fee_Read((uint16)BlockID, 0, tempBlock, BLOCKSIZE)) {
-            return false; // Could not start job
-        }
-        while (Memory_MainFunction())
-            ;
-        if (!Memory_Success()) {
-            return false;
-        }
-    }
-
-    // Modify data in buffer
-    for (size_t i = 0; i < Length; i++) {
-        tempBlock[Offset + i] = pData[i];
-    }
-
-    // Write entire block
-    if (E_OK == Fee_Write((uint16)BlockID, tempBlock)) {
-        while (Memory_MainFunction())
-            ;
-        return Memory_Success();
-    }
-    else {
-        return false;
-    }
-}
-Memory_Init();
-while (Memory_MainFunction()) {
-    /* Wait for memory initialization to complete */
-}
-
-#endif
